@@ -148,13 +148,13 @@
                 <div class="col-md-4">
                     <div class="checkbox">
                         <label for="age-0">
-                        <input type="checkbox" name="age[]" id="age-0" value="20_40">
+                        <input type="checkbox" name="age[]" id="age-0" value="20-40">
                         20-40
                         </label>
                     </div>
                     <div class="checkbox">
                         <label for="age-1">
-                        <input type="checkbox" name="age[]" id="age-1" value="41_64">
+                        <input type="checkbox" name="age[]" id="age-1" value="41-64">
                         41-64
                         </label>
                     </div>
