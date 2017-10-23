@@ -14,6 +14,7 @@
 	 */
 	 
 	authorizedPage();
+	if ($_SERVER['REQUEST_METHOD'] !== 'POST') header('Location: custom-reports');
 	global $params, $route, $view;
 	include('header.php');
 	
@@ -21,8 +22,6 @@
 	'postgres', 'admin', // replace with actual password
 	'EvanDB');
 	$db2->connect();
-	
-	if ($_SERVER['REQUEST_METHOD'] !== 'POST') die();
 
 	$month = $_POST['month'];
 	$year = $_POST['year'];

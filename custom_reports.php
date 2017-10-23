@@ -19,8 +19,7 @@
     global $params, $route, $view;
     include('header.php');
     ?>
-<div class="container" >
-    <h3 align="center" style="margin-bottom: 5%">Custom Report</h3>
+<div class="container py-5" >
     <form action="custom-reports-table" method="POST" style="margin-left: 30%" >
         <fieldset>
             <!-- Select Basic -->
