@@ -70,22 +70,25 @@
 			$ageQuery .= ")";
 		}
 		
-		$whereClause = "$monthQuery AND $yearQuery ";
-		if ($locQuery !== "") $whereClause .= "AND $locQuery ";
-		if ($raceQuery !== "") $whereClause .= "AND $raceQuery ";
-		if ($ageQuery !== "") $whereClause .= "AND $ageQuery ";
+		$yearWhereClause = "$yearQuery ";
+		if ($locQuery !== "") $yearWhereClause .= "AND $locQuery ";
+		if ($raceQuery !== "") $yearWhereClause .= "AND $raceQuery ";
+		if ($ageQuery !== "") $yearWhereClause .= "AND $ageQuery ";
 		
-		$query = "SELECT COUNT(DISTINCT(participants.participantid)) as Participants
+		$monthWhereClause = $yearWhereClause . "AND $monthQuery ";
+		$newWhereClause = $monthWhereClause . "and participantclassattendance.firstclass = TRUE;";
+		$duplWhereClause = $monthWhereClause . "and participantclassattendance.firstclass = FALSE;";
+		$monthWhereClause .= ";";
+		
+		$baseQuery = "SELECT COUNT(DISTINCT(participants.participantid)) as Participants
 					FROM participants INNER JOIN participantclassattendance
 					ON participants.participantid = participantclassattendance.participantid
-					WHERE $whereClause;";
+					WHERE ";
 					
-		$results = pg_fetch_all($db2->query($query, []));
-		
-		echo "Query: " . $query;
-		echo '<br>';
-		echo '<br>';
-		echo print_r($results);
+		$monthRes = pg_fetch_result($db2->query($baseQuery . $monthWhereClause, []), 0, 0);
+		$newRes = pg_fetch_result($db2->query($baseQuery . $newWhereClause, []), 0, 0);
+		$duplRes = pg_fetch_result($db2->query($baseQuery . $duplWhereClause, []), 0, 0);
+		$yearRes = pg_fetch_result($db2->query($baseQuery . $yearWhereClause, []), 0, 0);
 	}
 	?>
 <div class="container">
@@ -115,16 +118,16 @@
         <tbody>
             <tr>
                 <td>
-                    7
+                    <?=$monthRes?>
                 </td>
                 <td>
-                    2
+                    <?=$newRes?>
                 </td>
                 <td>
-                    0
+                    <?=$duplRes?>
                 </td>
                 <td>
-                    24
+                    <?=$yearRes?>
                 </td>
             </tr>
         </tbody>
