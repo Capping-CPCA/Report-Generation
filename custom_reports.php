@@ -10,7 +10,7 @@
  * to the database and display the results in a new page
  * (defined in 'custom_reports_table.php')
  *
- * @author Rafael Mormol & Daniel Ahl
+ * @author Daniel Ahl & Rafael Mormol
  * @copyright 2017 Marist College
  * @version 0.1.4.1
  * @since 0.1.4.1
@@ -144,7 +144,31 @@
             </div>
             <!-- Multiple Checkboxes -->
             <div class="form-group row">
-                <label class="col-md-2 col-form-label" for="age[]"><b>Age</b></label>
+                <label class="col-md-2 col-form-label"><b>Age</b></label>
+					<div class="col-2">
+						<select id="minAge" name="minAge" class="form-control" onchange="minAgeChange()">
+							<option value="any">Any</option>
+							<?php
+								for ($i = 65; $i >= 18; $i--) {
+									echo "<option value='$i'>$i</option>";
+								}
+							?>
+						</select>
+					</div>
+					<div>
+						<p>To</p>
+					</div>
+					<div class="col-2">
+						<select id="maxAge" name="maxAge" class="form-control" onchange="maxAgeChange()">
+							<option value="any">Any</option>
+							<?php
+								for ($i = 65; $i >= 18; $i--) {
+									echo "<option value='$i'>$i</option>";
+								}
+							?>
+						</select>
+					</div>
+				<!--
                 <div class="col-md-4">
                     <div class="checkbox">
                         <label for="age-0">
@@ -165,6 +189,7 @@
                         </label>
                     </div>
                 </div>
+				-->
             </div>
             <!-- Submit -->
             <div class="form-group">
@@ -175,4 +200,26 @@
         </fieldset>
     </form>
 </div>
+<script>
+	function minAgeChange() {
+		minIndex = document.getElementById("minAge").selectedIndex;
+		maxList = document.getElementById("maxAge").options;
+		if (minIndex === 0) {
+			for (i = 1; i < maxList.length; i++) {
+				maxList[i].disabled = false;
+			}
+		} else {
+			for (i = 1; i < maxList.length; i++) {
+				maxList[i].disabled = i >= minIndex;
+			}
+		}
+	}
+	function maxAgeChange() {
+		maxIndex = document.getElementById("maxAge").selectedIndex;
+		minList = document.getElementById("minAge").options;
+		for (i = 1; i < minList.length; i++) {
+			minList[i].disabled = i <= maxIndex;
+		}
+	}
+</script>
 <?php include('footer.php'); ?>
