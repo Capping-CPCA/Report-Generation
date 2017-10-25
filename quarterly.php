@@ -70,7 +70,7 @@
 				</div>
 				<div class="col">
 					<div class="form-group">
-						<select class="form-control" name="year"  id="year">
+						<select class="form-control" name="year" id="year">
 						<!-- Javascript below adds the options based on current year -->
                   </select>
 					</div>
@@ -86,7 +86,10 @@
 		</form>
 	</div>
 	<div class="container py-3">
-		<h1 class="text-center"><?php if ($quarter !== "") echo "Q" . $quarter;?> <?=$year?></h1>
+		<h1 class="text-center">
+			<?php if ($quarter !== "") echo "Q" . $quarter;?>
+			<?=$year?>
+		</h1>
 	</div>
 	<div class="container py-3">
 		<table class="table table-active">
@@ -116,39 +119,63 @@
 			<tbody>
 				<tr>
 					<td scope="row">Have an increased knowledge of the topics</td>
-					<td><?php if (count($sFavorResults) > 0) {
+					<td>
+						<?php if (count($sFavorResults) > 0) {
 						if ($sTotalResults["topic"] > 0) 
 							echo ($sFavorResults["topic"]/$sTotalResults["topic"])*100 . "%";
-					}?></td>
-					<td><?php if (count($sFavorResults) > 0) echo $sFavorResults["topic"];?></td>
-					<td><?php if (count($sTotalResults) > 0) echo $sTotalResults["topic"];?></td>
+					}?>
+					</td>
+					<td>
+						<?php if (count($sFavorResults) > 0) echo $sFavorResults["topic"];?>
+					</td>
+					<td>
+						<?php if (count($sTotalResults) > 0) echo $sTotalResults["topic"];?>
+					</td>
 				</tr>
 				<tr>
 					<td scope="row">Plan on using specific techniques discussed in class</td>
-					<td><?php if (count($sFavorResults) > 0) {
+					<td>
+						<?php if (count($sFavorResults) > 0) {
 						if ($sTotalResults["practice"] > 0) 
 							echo ($sFavorResults["practice"]/$sTotalResults["practice"])*100 . "%";
-					}?></td>
-					<td><?php if (count($sFavorResults) > 0) echo $sFavorResults["practice"];?></td>
-					<td><?php if (count($sTotalResults) > 0) echo $sTotalResults["practice"];?></td>
+					}?>
+					</td>
+					<td>
+						<?php if (count($sFavorResults) > 0) echo $sFavorResults["practice"];?>
+					</td>
+					<td>
+						<?php if (count($sTotalResults) > 0) echo $sTotalResults["practice"];?>
+					</td>
 				</tr>
 				<tr>
 					<td scope="row">Realized other parents share the same concerns</td>
-					<td><?php if (count($sFavorResults) > 0) {
+					<td>
+						<?php if (count($sFavorResults) > 0) {
 						if ($sTotalResults["otherparents"] > 0) 
 							echo ($sFavorResults["otherparents"]/$sTotalResults["otherparents"])*100 . "%";
-					}?></td>
-					<td><?php if (count($sFavorResults) > 0) echo $sFavorResults["otherparents"];?></td>
-					<td><?php if (count($sTotalResults) > 0) echo $sTotalResults["otherparents"];?></td>
+					}?>
+					</td>
+					<td>
+						<?php if (count($sFavorResults) > 0) echo $sFavorResults["otherparents"];?>
+					</td>
+					<td>
+						<?php if (count($sTotalResults) > 0) echo $sTotalResults["otherparents"];?>
+					</td>
 				</tr>
 				<tr>
 					<td scope="row">Understand children have different perspectives than they do</td>
-					<td><?php if (count($sFavorResults) > 0) {
+					<td>
+						<?php if (count($sFavorResults) > 0) {
 						if ($sTotalResults["perspective"] > 0) 
 							echo ($sFavorResults["perspective"]/$sTotalResults["perspective"])*100 . "%";
-					}?></td>
-					<td><?php if (count($sFavorResults) > 0) echo $sFavorResults["perspective"];?></td>
-					<td><?php if (count($sTotalResults) > 0) echo $sTotalResults["perspective"];?></td>
+					}?>
+					</td>
+					<td>
+						<?php if (count($sFavorResults) > 0) echo $sFavorResults["perspective"];?>
+					</td>
+					<td>
+						<?php if (count($sTotalResults) > 0) echo $sTotalResults["perspective"];?>
+					</td>
 				</tr>
 			</tbody>
 		</table>

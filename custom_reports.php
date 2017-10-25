@@ -177,9 +177,23 @@
 	</div>
 </div>
 <script>
-	var MIN_YEAR = 2010;
+	const MIN_YEAR = 2010;
 	
 	window.onload = initPage;
+	
+	function initPage() {
+		var d = new Date();
+		var monthElem = document.getElementById("month");
+		monthElem.selectedIndex = d.getMonth();
+		var yearElem = document.getElementById("year");
+		var year = d.getFullYear();
+		for (y = year; y >= MIN_YEAR; y--) {
+			var opt = document.createElement('option');
+			opt.value = y;
+			opt.innerHTML = y;
+			yearElem.appendChild(opt);
+		}
+	}
 	
 	function minAgeChange() {
 		var minIndex = document.getElementById("minAge").selectedIndex;
@@ -200,20 +214,6 @@
 		var minList = document.getElementById("minAge").options;
 		for (i = 1; i < minList.length; i++) {
 			minList[i].disabled = i < maxIndex;
-		}
-	}
-	
-	function initPage() {
-		var d = new Date();
-		var monthElem = document.getElementById("month");
-		monthElem.selectedIndex = d.getMonth();
-		var yearElem = document.getElementById("year");
-		var year = d.getFullYear();
-		for (y = year; y >= MIN_YEAR; y--) {
-			var opt = document.createElement('option');
-			opt.value = y;
-			opt.innerHTML = y;
-			yearElem.appendChild(opt);
 		}
 	}
 </script>

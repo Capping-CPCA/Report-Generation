@@ -71,8 +71,8 @@
 		if ($ageQuery !== "") $yearWhereClause .= "AND $ageQuery ";
 		
 		$monthWhereClause = $yearWhereClause . "AND $monthQuery ";
-		$newWhereClause = $monthWhereClause . "and participantclassattendance.firstclass = TRUE;";
-		$duplWhereClause = $monthWhereClause . "and participantclassattendance.firstclass = FALSE;";
+		$newWhereClause = $monthWhereClause . "AND participantclassattendance.firstclass = TRUE;";
+		$duplWhereClause = $monthWhereClause . "AND participantclassattendance.firstclass = FALSE;";
 		$monthWhereClause .= ";";
 		
 		$baseQuery = "SELECT COUNT(DISTINCT(participants.participantid)) as Participants

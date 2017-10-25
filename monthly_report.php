@@ -494,6 +494,13 @@
 		$numChildNewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
 		$numChildDupRes = $numChildMonthRes - $numChildNewRes;
 		
+		#Num of Classes
+		$baseQuery = "SELECT COUNT(DISTINCT(date)) FROM participantsenrolled ";
+		$query = $baseQuery . "WHERE $monthWhere AND $yearWhere;";
+		$numClassMonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$query = $baseQuery . "WHERE $yearWhere;";
+		$numClassYearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		
 	}
    ?>
 <div class="container">
@@ -1855,6 +1862,37 @@
 			</tr>
 		</tbody>
 	</table>
+	<h6 class="text-center pt-3 pb-2">
+		Services Provided
+	</h6>
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>
+				</th>
+				<th>
+					Current Month
+				</th>
+				<th>
+					YTD
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>
+					<b># of Classes</b>
+				</td>
+				<td>
+					<?php if (isset($numClassMonthRes)) echo $numClassMonthRes; else echo "";?>
+				</td>
+				<td>
+					<?php if (isset($numClassYearRes)) echo $numClassYearRes; else echo "";?>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	
 </div>
 <script>
 	const MIN_YEAR = 2010;
