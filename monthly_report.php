@@ -481,6 +481,18 @@
 		$query = $pYearQuery . " AND $otherZipWhere";
 		$otherYearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
 		
+		#Children Served Indirectly
+		$baseQuery = "SELECT SUM(numchildren) FROM participantsenrolled
+						WHERE participantid IN (
+							SELECT DISTINCT(participantid) FROM participantsenrolled
+							WHERE $yearWhere ";
+		$query = $baseQuery . " AND $monthWhere); ";
+		$numChildMonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$query = $baseQuery . ");";
+		$numChildYearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$query = $baseQuery . " AND $monthWhere AND $pNewWhere); ";
+		$numChildNewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$numChildDupRes = $numChildMonthRes - $numChildNewRes;
 		
 	}
    ?>
@@ -1798,6 +1810,48 @@
 				<td>
 					<?php if (isset($otherYearRes)) echo $otherYearRes; else echo "";?>
 				</td>	
+			</tr>
+		</tbody>
+	</table>
+	<h5 class="text-center pt-4 pb-2">
+		Parenting Services
+	</h5>
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>
+				</th>
+				<th>
+					Current Month
+				</th>
+				<th>
+					Newly Served
+				</th>
+				<th>
+					Duplicate Served
+				</th>
+				<th>
+					YTD
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>
+					<b>Children Served Indirectly</b>
+				</td>
+				<td>
+					<?php if (isset($numChildMonthRes)) echo $numChildMonthRes; else echo "";?>
+				</td>
+				<td>
+					<?php if (isset($numChildNewRes)) echo $numChildNewRes; else echo "";?>
+				</td>
+				<td>
+					<?php if (isset($numChildDupRes)) echo $numChildDupRes; else echo "";?>
+				</td>
+				<td>
+					<?php if (isset($numChildYearRes)) echo $numChildYearRes; else echo "";?>
+				</td>
 			</tr>
 		</tbody>
 	</table>
