@@ -1,176 +1,180 @@
 <?php
-/**
- * PEP Capping 2017 Algozzine's Class
- *
- * Allows users to create a custom report.
- *
- * This page has a form that allows users to specify what
- * information they would like to see in a custom report.
- * The 'Generate Report' button will kick off a custom query
- * to the database and display the results in a new page
- * (defined in 'custom_reports_table.php')
- *
- * @author Daniel Ahl & Rafael Mormol
- * @copyright 2017 Marist College
- * @version 0.1.4.1
- * @since 0.1.4.1
- */
-	authorizedPage();
-	global $params, $route, $view;
-	include('header.php');
-?>
+	/**
+	 * PEP Capping 2017 Algozzine's Class
+	 *
+	 * Allows users to create a custom report.
+	 *
+	 * This page has a form that allows users to specify what
+	 * information they would like to see in a custom report.
+	 * The 'Generate Report' button will kick off a custom query
+	 * to the database and display the results in a new page
+	 * (defined in 'custom_reports_table.php')
+	 *
+	 * @author Daniel Ahl & Rafael Mormol
+	 * @copyright 2017 Marist College
+	 * @version 0.1.4.1
+	 * @since 0.1.4.1
+	 */
+		authorizedPage();
+		global $params, $route, $view;
+		include('header.php');
+	?>
 <div class="container py-5">
-	<form action="custom-reports-table" method="POST" style="margin-left: 30%" autocomplete="on">
-		<fieldset>
-			<!-- Select Basic -->
-			<div class="form-group row">
-				<label class="col-md-2 col-form-label" for="month"><b>Month</b></label>
-				<div class="col-md-4">
-					<select id="month" name="month" class="form-control">
-						<option value="1">January</option>
-						<option value="2">February</option>
-						<option value="3">March</option>
-						<option value="4">April</option>
-						<option value="5">May</option>
-						<option value="6">June</option>
-						<option value="7">July</option>
-						<option value="8">August</option>
-						<option value="9">September</option>
-						<option value="10">October</option>
-						<option value="11">November</option>
-						<option value="12">December</option>
-					</select>
-				</div>
-			</div>
-			<!-- Select Basic -->
-			<div class="form-group row">
-				<label class="col-md-2 col-form-label" for="year"><b>Year</b></label>
-				<div class="col-md-4">
-					<select id="year" name="year" class="form-control">
-						<!-- YEAR OPTIONS INIT IN JAVASCRIPT BELOW.
-							BASED ON CURRENT YEAR.-->
-					</select>
-				</div>
-			</div>
-			<!-- Multiple Checkboxes -->
-			<div class="form-group row">
-				<label class="col-md-2 col-form-label" for="location[]"><b>Location</b></label>
-				<div class="col-md-4">
-					<div class="checkbox">
-						<label for="location-0">
-						<input type="checkbox" name="location[]" id="location-0" value="Cornerstone">
-						Cornerstone
-						</label>
-					</div>
-					<div class="checkbox">
-						<label for="location-1">
-						<input type="checkbox" name="location[]" id="location-1" value="Dutchess County Jail">
-						Dutches County Jail
-						</label>
-					</div>
-					<div class="checkbox">
-						<label for="location-2">
-						<input type="checkbox" name="location[]" id="location-2" value="Florence Manor">
-						Florence Manor
-						</label>
-					</div>
-					<div class="checkbox">
-						<label for="location-3">
-						<input type="checkbox" name="location[]" id="location-3" value="Fox Run">
-						Fox Run
-						</label>
-					</div>
-					<div class="checkbox">
-						<label for="location-4">
-						<input type="checkbox" name="location[]" id="location-4" value="ITAP Meadow Run">
-						ITAP Meadow Run
-						</label>
+	<div class="col-auto" >
+		<form action="custom-reports-table" method="POST" autocomplete="on">
+			<fieldset>
+				<!-- Select Basic -->
+				<div class="form-group row">
+					<label class="col-md-2 col-form-label" for="month"><b>Month</b></label>
+					<div class="col-md-4">
+						<select id="month" name="month" class="form-control">
+							<option value="1">January</option>
+							<option value="2">February</option>
+							<option value="3">March</option>
+							<option value="4">April</option>
+							<option value="5">May</option>
+							<option value="6">June</option>
+							<option value="7">July</option>
+							<option value="8">August</option>
+							<option value="9">September</option>
+							<option value="10">October</option>
+							<option value="11">November</option>
+							<option value="12">December</option>
+						</select>
 					</div>
 				</div>
-			</div>
-			<!-- Multiple Checkboxes -->
-			<div class="form-group row">
-				<label class="col-md-2 col-form-label" for="race[]"><b>Race</b></label>
-				<div class="col-md-4">
-					<div class="checkbox">
-						<label for="race-0">
-						<input type="checkbox" name="race[]" id="race-0" value="Caucasian">
-						Caucasian
-						</label>
-					</div>
-					<div class="checkbox">
-						<label for="race-1">
-						<input type="checkbox" name="race[]" id="race-1" value="African American">
-						African American
-						</label>
-					</div>
-					<div class="checkbox">
-						<label for="race-2">
-						<input type="checkbox" name="race[]" id="race-2" value="Multi-Racial">
-						Multi Racial
-						</label>
-					</div>
-					<div class="checkbox">
-						<label for="race-3">
-						<input type="checkbox" name="race[]" id="race-3" value="Latino">
-						Latino
-						</label>
-					</div>
-					<div class="checkbox">
-						<label for="race-4">
-						<input type="checkbox" name="race[]" id="race-4" value="Pacific Islander">
-						Pacific Islander
-						</label>
-					</div>
-					<div class="checkbox">
-						<label for="race-5">
-						<input type="checkbox" name="race[]" id="race-5" value="Native American">
-						Native American
-						</label>
-					</div>
-					<div class="checkbox">
-						<label for="race-6">
-						<input type="checkbox" name="race[]" id="race-6" value="Other">
-						Other
-						</label>
+				<!-- Select Basic -->
+				<div class="form-group row">
+					<label class="col-md-2 col-form-label" for="year"><b>Year</b></label>
+					<div class="col-md-4">
+						<select id="year" name="year" class="form-control">
+							<!-- YEAR OPTIONS INIT IN JAVASCRIPT BELOW.
+								BASED ON CURRENT YEAR.-->
+						</select>
 					</div>
 				</div>
-			</div>
-			<!-- Multiple Checkboxes -->
-			<div class="form-group row">
-				<label class="col-md-2 col-form-label"><b>Age</b></label>
-				<div class="col-2">
-					<select id="minAge" name="minAge" class="form-control" onchange="minAgeChange()">
-						<option value="any">Any</option>
-						<?php
-							for ($i = 65; $i >= 18; $i--) {
-								echo "<option value='$i'>$i</option>";
-							}
-							?>
-					</select>
+				<!-- Multiple Checkboxes -->
+				<div class="form-group row">
+					<label class="col-md-2 col-form-label" for="location[]"><b>Location</b></label>
+					<div class="col-md-4">
+						<div class="checkbox">
+							<label for="location-0">
+							<input type="checkbox" name="location[]" id="location-0" value="Cornerstone">
+							Cornerstone
+							</label>
+						</div>
+						<div class="checkbox">
+							<label for="location-1">
+							<input type="checkbox" name="location[]" id="location-1" value="Dutchess County Jail">
+							Dutchess County Jail
+							</label>
+						</div>
+						<div class="checkbox">
+							<label for="location-2">
+							<input type="checkbox" name="location[]" id="location-2" value="Florence Manor">
+							Florence Manor
+							</label>
+						</div>
+						<div class="checkbox">
+							<label for="location-3">
+							<input type="checkbox" name="location[]" id="location-3" value="Fox Run">
+							Fox Run
+							</label>
+						</div>
+						<div class="checkbox">
+							<label for="location-4">
+							<input type="checkbox" name="location[]" id="location-4" value="ITAP Meadow Run">
+							ITAP Meadow Run
+							</label>
+						</div>
+					</div>
 				</div>
-				<div>
-					<p>To</p>
+				<!-- Multiple Checkboxes -->
+				<div class="form-group row">
+					<label class="col-md-2 col-form-label" for="race[]"><b>Race</b></label>
+					<div class="col-md-4">
+						<div class="checkbox">
+							<label for="race-0">
+							<input type="checkbox" name="race[]" id="race-0" value="Caucasian">
+							Caucasian
+							</label>
+						</div>
+						<div class="checkbox">
+							<label for="race-1">
+							<input type="checkbox" name="race[]" id="race-1" value="African American">
+							African American
+							</label>
+						</div>
+						<div class="checkbox">
+							<label for="race-2">
+							<input type="checkbox" name="race[]" id="race-2" value="Multi-Racial">
+							Multi Racial
+							</label>
+						</div>
+						<div class="checkbox">
+							<label for="race-3">
+							<input type="checkbox" name="race[]" id="race-3" value="Latino">
+							Latino
+							</label>
+						</div>
+						<div class="checkbox">
+							<label for="race-4">
+							<input type="checkbox" name="race[]" id="race-4" value="Pacific Islander">
+							Pacific Islander
+							</label>
+						</div>
+						<div class="checkbox">
+							<label for="race-5">
+							<input type="checkbox" name="race[]" id="race-5" value="Native American">
+							Native American
+							</label>
+						</div>
+						<div class="checkbox">
+							<label for="race-6">
+							<input type="checkbox" name="race[]" id="race-6" value="Other">
+							Other
+							</label>
+						</div>
+					</div>
 				</div>
-				<div class="col-2">
-					<select id="maxAge" name="maxAge" class="form-control" onchange="maxAgeChange()">
-						<option value="any">Any</option>
-						<?php
-							for ($i = 65; $i >= 18; $i--) {
-								echo "<option value='$i'>$i</option>";
-							}
-							?>
-					</select>
+				<!-- Multiple Checkboxes -->
+				<div class="form-group row">
+					<label class="col-md-2 col-form-label"><b>Age</b></label>
+					<div class="col-md-5">
+						<div class="row">
+							<div class="col-md-5">
+								<select id="minAge" name="minAge" class="form-control" onchange="minAgeChange()">
+									<option value="any">Any</option>
+									<?php
+										for ($i = 65; $i >= 18; $i--) {
+											echo "<option value='$i'>$i</option>";
+										}
+										?>
+								</select>
+							</div>
+							<div class="col-md-1" align="center">To</div>
+							<div class="col-md-5">
+								<select id="maxAge" name="maxAge" class="form-control" onchange="maxAgeChange()">
+									<option value="any">Any</option>
+									<?php
+										for ($i = 65; $i >= 18; $i--) {
+											echo "<option value='$i'>$i</option>";
+										}
+										?>
+								</select>
+							</div>
+						</div>
+					</div>
 				</div>
-			</div>
-			<!-- Submit -->
-			<div class="form-group">
-				<div class="col-md-4">
-					<button type="submit" class="btn cpca">Generate Report</button>
+				<!-- Submit -->
+				<div class="form-group pt-2">
+					<div class="col-md-7" align="center">
+						<button type="submit" class="btn cpca">Generate Report</button>
+					</div>
 				</div>
-			</div>
-		</fieldset>
-	</form>
+			</fieldset>
+		</form>
+	</div>
 </div>
 <script>
 	var MIN_YEAR = 2010;
