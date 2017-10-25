@@ -1,17 +1,17 @@
 <?php
-	/**
-	 * PEP Capping 2017 Algozzine's Class
-	 *
-	 * Displays the results of a custom report.
-	 *
-	 * This page will display the information requested in the form
-	 * on custom_reports.php page, formatted into a single table.
-	 *
-	 * @author Daniel Ahl & Rafael Mormol
-	 * @copyright 2017 Marist College
-	 * @version 0.1
-	 * @since 0.1
-	 */
+/**
+ * PEP Capping 2017 Algozzine's Class
+ *
+ * Displays the results of a custom report.
+ *
+ * This page will display the information requested in the form
+ * on custom_reports.php page, formatted into a single table.
+ *
+ * @author Daniel Ahl & Rafael Mormol
+ * @copyright 2017 Marist College
+ * @version 0.1
+ * @since 0.1
+ */
 	 
 	authorizedPage();
 	if ($_SERVER['REQUEST_METHOD'] !== 'POST') header('Location: custom-reports');
@@ -22,7 +22,7 @@
 	'postgres', 'admin', // replace with actual password
 	'EvanDB');
 	$db2->connect();
-
+	
 	$month = $_POST['month'];
 	$year = $_POST['year'];
 	$locs = isset($_POST['location']) ? $_POST['location'] : [];
@@ -33,7 +33,7 @@
 	$monthQuery = "(date_part('month', participantclassattendance.date) = $month)";
 	$yearQuery = "(date_part('year', participantclassattendance.date) = $year)";
 	$locQuery = "";
-	/*
+	
 	if (count($locs) > 0) {
 		$locQuery = "(participantclassattendance.siteName = '" . $locs[0] . "' ";
 		for ($i = 1; $i < count($locs); $i++) {
@@ -41,7 +41,7 @@
 		}
 		$locQuery .= ")";
 	}
-	*/
+	
 	$raceQuery = "";
 	if (count($races) > 0) {
 		$raceQuery = "(participants.race = '" . $races[0] . "' ";
@@ -64,27 +64,6 @@
 	} else {
 		if ($ageQuery !== "") $ageQuery .= ")";
 	}
-	/*
-	if (count($ages) > 0) {
-		if ($ages[0] === '65') {
-			$ageQuery = "((date_part('year', AGE(participants.dateOfBirth)) >= 65) ";
-		} elseif ($ages[0] === '41-64') {
-			$ageQuery = "((date_part('year', AGE(participants.dateOfBirth)) >= 41 AND date_part('year', AGE(participants.dateOfBirth)) <= 64) ";
-		} else {
-			 $ageQuery = "((date_part('year', AGE(participants.dateOfBirth)) >= 20 AND date_part('year', AGE(participants.dateOfBirth)) <= 40) ";
-		}
-		for ($i = 1; $i < count($ages); $i++) {
-			if ($ages[$i] === '65') {
-				$ageQuery .= "OR (date_part('year', AGE(participants.dateOfBirth)) >= 65) ";
-			} elseif ($ages[$i] === '41-64') {
-				$ageQuery .= "OR (date_part('year', AGE(participants.dateOfBirth)) >= 41 AND date_part('year', AGE(participants.dateOfBirth)) <= 64) ";
-			} else {
-				$ageQuery .= "OR (date_part('year', AGE(participants.dateOfBirth)) >= 20 AND date_part('year', AGE(participants.dateOfBirth)) <= 40) ";
-			}
-		}
-		$ageQuery .= ")";
-	}
-	*/
 	
 	$yearWhereClause = "$yearQuery ";
 	if ($locQuery !== "") $yearWhereClause .= "AND $locQuery ";
@@ -105,7 +84,7 @@
 	$newRes = pg_fetch_result($db2->query($baseQuery . $newWhereClause, []), 0, 0);
 	$duplRes = pg_fetch_result($db2->query($baseQuery . $duplWhereClause, []), 0, 0);
 	$yearRes = pg_fetch_result($db2->query($baseQuery . $yearWhereClause, []), 0, 0);
-?>
+	?>
 <div class="container">
 	<h3 align="center">Custom Report</h3>
 	<br />
@@ -160,31 +139,17 @@
 			}
 			
 			#Display the chosen ages
-			if ($minAge !== 'any' || $maxAge !=='any')
-				if ($minAge === 'any') {
+			if ($minAge !== 'any' || $maxAge !=='any') {
+				if ($minAge === $maxAge) {
+					echo "<div><b>Age Range:</b> " . $maxAge . "</div>";
+				} elseif ($minAge === 'any') {
 					echo "<div><b>Age Range:</b> " . $maxAge . " and below</div>";
 				} elseif ($maxAge === 'any') {
 					echo "<div><b>Age Range:</b> " . $minAge . " and above</div>";
 				} else {
 					echo "<div><b>Age Range:</b> " . $minAge . " - " . $maxAge . "</div>";
 				}
-			/*
-			if (count($ages) > 0) {
-				if ($ages[0] == 65) {
-					echo "<div><b>Age Range:</b> " . $ages[0] . "+";
-				} else {
-					echo "<div><b>Age Range:</b> " . $ages[0];
-				}
-				for ($i = 1; $i < count($ages); $i++) {
-					if ($ages[$i] == 65) {
-						echo ", " . $ages[$i] . "+ ";
-					} else {
-						echo ", " . $ages[$i] . " ";
-					}
-				}
-				echo "</div>";
 			}
-			*/
 			?>
 		<table class="table table-hover table-striped table-bordered">
 			<thead>
@@ -199,7 +164,7 @@
 						Duplicate Served
 					</th>
 					<th>
-						YTD
+						Year
 					</th>
 				</tr>
 			</thead>
@@ -220,6 +185,9 @@
 				</tr>
 			</tbody>
 		</table>
+	</div>
+	<div class="container" align="center">
+		<a href="custom-reports" class="btn cpca">Run Another Report</a>		
 	</div>
 </div>
 <?php include('footer.php'); ?>
