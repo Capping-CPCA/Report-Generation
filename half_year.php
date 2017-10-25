@@ -96,10 +96,7 @@
 		</form>
 	</div>
 	<div class="container py-3">
-		<h1 class="text-center">
-			<?=$half?>
-				<?=$year?>
-		</h1>
+		<h1 class="text-center" id="date_display"><?=$half?> <?=$year?></h1>
 	</div>
 	<div class="container py-3">
 		<table class="table table-active">
@@ -199,8 +196,6 @@
 	function initPage() {
 		var d = new Date();
 		var halfElem = document.getElementById("half");
-		var month = d.getMonth();
-		halfElem.selectedIndex = (month < 6) ? 0 : 1;
 		var yearElem = document.getElementById("year");
 		var year = d.getFullYear();
 		for (y = year; y >= MIN_YEAR; y--) {
@@ -208,6 +203,15 @@
 			opt.value = y;
 			opt.innerHTML = y;
 			yearElem.appendChild(opt);
+		}
+		display = document.getElementById("date_display").innerHTML;
+		if (display === " ") {
+			var month = d.getMonth();
+			halfElem.selectedIndex = (month < 6) ? 0 : 1;
+		} else {
+			halfElem.selectedIndex = (display.toLowerCase().includes("semi")) ? 0 : 1;
+			var y = parseInt(display.substr(display.length - 4));
+			yearElem.selectedIndex = year - y;
 		}
 	}
 </script>

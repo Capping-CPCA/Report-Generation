@@ -102,10 +102,7 @@
 		</form>
 	</div>
 	<div class="container py-3">
-		<h1 class="text-center">
-			<?php if ($quarter !== "") echo "Q" . $quarter;?>
-			<?=$year?>
-		</h1>
+		<h1 class="text-center" id="date_display"><?php if ($quarter !== "") echo "Q" . $quarter;?> <?=$year?></h1>
 	</div>
 	<div class="container py-3">
 		<table class="table table-active">
@@ -205,16 +202,6 @@
 	function initPage() {
 		var d = new Date();
 		var quartElem = document.getElementById("quarter");
-		var month = d.getMonth();
-		if (month < 3) {
-			quartElem.selectedIndex = 0;
-		} else if (month < 6) {
-			quartElem.selectedIndex = 1;
-		} else if (month < 9) {
-			quartElem.selectedIndex = 2;
-		} else {
-			quartElem.selectedIndex = 3;
-		}
 		var yearElem = document.getElementById("year");
 		var year = d.getFullYear();
 		for (y = year; y >= MIN_YEAR; y--) {
@@ -222,6 +209,23 @@
 			opt.value = y;
 			opt.innerHTML = y;
 			yearElem.appendChild(opt);
+		}
+		display = document.getElementById("date_display").innerHTML;
+		if (display === " ") {
+			var month = d.getMonth();
+			if (month < 3) {
+				quartElem.selectedIndex = 0;
+			} else if (month < 6) {
+				quartElem.selectedIndex = 1;
+			} else if (month < 9) {
+				quartElem.selectedIndex = 2;
+			} else {
+				quartElem.selectedIndex = 3;
+			}
+		} else {
+			quartElem.selectedIndex = display.substr(1,2)-1;
+			var y = parseInt(display.substr(display.length - 4));
+			yearElem.selectedIndex = year - y;
 		}
 	}
 </script>

@@ -563,8 +563,7 @@
 	</div>
 	<div class="page-header">
 		<div align="center">
-			<h2>
-				<?php
+			<h2 id="date_display"><?php
 				switch ($month) {
 					case 1: echo "January";
 							break;
@@ -591,9 +590,7 @@
 					case 12: echo "December";
 							break;
 				}
-				?>
-					<?=$year?>
-			</h2>
+				?> <?=$year?></h2>
 		</div>
 	</div>
 	<br />
@@ -1924,6 +1921,53 @@
 	function initPage() {
 		var d = new Date();
 		var monthElem = document.getElementById("month");
+		var yearElem = document.getElementById("year");
+		var year = d.getFullYear();
+		for (y = year; y >= MIN_YEAR; y--) {
+			var opt = document.createElement('option');
+			opt.value = y;
+			opt.innerHTML = y;
+			yearElem.appendChild(opt);
+		}
+		display = document.getElementById("date_display").innerHTML;
+		if (display === " ") {
+			var month = d.getMonth();
+			monthElem.selectedIndex = d.getMonth();
+		} else {
+			monthIndex = 0;
+			if (display.toLowerCase().includes("jan")) {
+				monthIndex = 0;
+			} else if (display.toLowerCase().includes("feb")) {
+				monthIndex = 1;
+			} else if (display.toLowerCase().includes("mar")) {
+				monthIndex = 2;
+			} else if (display.toLowerCase().includes("apr")) {
+				monthIndex = 3;
+			} else if (display.toLowerCase().includes("may")) {
+				monthIndex = 4;
+			} else if (display.toLowerCase().includes("jun")) {
+				monthIndex = 5;
+			} else if (display.toLowerCase().includes("jul")) {
+				monthIndex = 6;
+			} else if (display.toLowerCase().includes("aug")) {
+				monthIndex = 7;
+			} else if (display.toLowerCase().includes("sept")) {
+				monthIndex = 8;
+			} else if (display.toLowerCase().includes("oct")) {
+				monthIndex = 9;
+			} else if (display.toLowerCase().includes("nov")) {
+				monthIndex = 10;
+			} else if (display.toLowerCase().includes("dec")) {
+				monthIndex = 11;
+			}
+			monthElem.selectedIndex = monthIndex;
+			
+			var y = parseInt(display.substr(display.length - 4));
+			yearElem.selectedIndex = year - y;
+		}
+		/*
+		var d = new Date();
+		var monthElem = document.getElementById("month");
 		monthElem.selectedIndex = d.getMonth();
 		var yearElem = document.getElementById("year");
 		var year = d.getFullYear();
@@ -1933,6 +1977,7 @@
 			opt.innerHTML = y;
 			yearElem.appendChild(opt);
 		}
+		*/
 	}
 </script>
 <?php include('footer.php'); ?>
