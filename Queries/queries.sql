@@ -21,7 +21,7 @@ AND (date_part('year', AGE(PE.dateOfBirth)) > 65) --Insert < for a range
 -- Gender
 AND PE.sex = 'Male' --Insert sex
 
---Children
+--Children, accounts for changes in numchildren over the time period
 SELECT SUM(Result.numchildren) FROM
 (
 	SELECT ROW_NUMBER() OVER(PARTITION BY PE.ParticipantID ORDER BY PE.numchildren DESC) AS RN, PE.numchildren
