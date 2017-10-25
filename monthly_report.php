@@ -1,4 +1,21 @@
 <?php 
+	/**
+	 * PEP Capping 2017 Algozzine's Class
+	 *
+	 * Allows users to view Monthly report figures.
+	 *
+	 * Displays all information required in the monthly
+	 * reports, formatted into a series of tables.
+	 * Users can select the month and year from the dropdowns
+	 * at the top, then hit the "Generate Report" to populate
+	 * the table with values from the database.
+	 *
+	 * @author Daniel Ahl
+	 *		   Rafael Mormol
+	 * @copyright 2017 Marist College
+	 * @version 0.1.4.2
+	 * @since 0.1.4.1
+	 */
    authorizedPage();
    global $params, $route, $view;
    include('header.php'); 
@@ -546,7 +563,8 @@
 	</div>
 	<div class="page-header">
 		<div align="center">
-			<h2><?php
+			<h2>
+				<?php
 				switch ($month) {
 					case 1: echo "January";
 							break;
@@ -573,7 +591,9 @@
 					case 12: echo "December";
 							break;
 				}
-				?> <?=$year?></h2>
+				?>
+					<?=$year?>
+			</h2>
 		</div>
 	</div>
 	<br />
@@ -816,7 +836,7 @@
                African American
                </b>
 				</td>
-					<td>
+				<td>
 					<?php if (isset($afAmMonthRes)) echo $afAmMonthRes; else echo "";?>
 				</td>
 				<td>
@@ -835,7 +855,7 @@
                Multi Racial
                </b>
 				</td>
-					<td>
+				<td>
 					<?php if (isset($multRacMonthRes)) echo $multRacMonthRes; else echo "";?>
 				</td>
 				<td>
@@ -1818,7 +1838,7 @@
 				</td>
 				<td>
 					<?php if (isset($otherYearRes)) echo $otherYearRes; else echo "";?>
-				</td>	
+				</td>
 			</tr>
 		</tbody>
 	</table>
@@ -1894,7 +1914,7 @@
 			</tr>
 		</tbody>
 	</table>
-	
+
 </div>
 <script>
 	const MIN_YEAR = 2010;

@@ -1,14 +1,33 @@
 <?php 
+	/**
+	 * PEP Capping 2017 Algozzine's Class
+	 *
+	 * Allows users to view Annual and Semi-Annual report figures.
+	 *
+	 * Displays all information required in the Annual and Semi-Annual
+	 * reports, formatted into a series of tables.
+	 * Users can select a year and either an Annual or Semi-Annual report
+	 * from the dropdowns menus at the top, then hit the "Generate Report"
+	 * to populate the table with values from the database.
+	 *
+	 * @author Daniel Ahl
+	 *		   Rafael Mormol
+	 * @copyright 2017 Marist College
+	 * @version 0.1.4.2
+	 * @since 0.1.4.1
+	 */
     authorizedPage();
    
     global $params, $route, $view;
    
     include('header.php'); 
    
+   //REPLACE THIS WITH REAL DATABASE
     $db2 = new Database('localhost', '5432',
 		'postgres', 'admin', // replace with actual password
 		'EvanDB');
 	$db2->connect();
+	///////////
 	
 	$MIN_FAVOR_SCORE = 7;
 	

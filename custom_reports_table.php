@@ -4,13 +4,14 @@
 	 *
 	 * Displays the results of a custom report.
 	 *
-	 * This page will display the information requested in the form
+	 * This page display the information requested in the form
 	 * on custom_reports.php page, formatted into a single table.
 	 *
-	 * @author Daniel Ahl & Rafael Mormol
+	 * @author Daniel Ahl
+	 *		   Rafael Mormol
 	 * @copyright 2017 Marist College
-	 * @version 0.1
-	 * @since 0.1
+	 * @version 0.1.4.2
+	 * @since 0.1.4.1
 	 */
 		 
 		authorizedPage();
@@ -18,10 +19,12 @@
 		global $params, $route, $view;
 		include('header.php');
 		
+		//REPLACE THIS WITH REAL DATABASE
 		$db2 = new Database('localhost', '5432',
 		'postgres', 'admin', // replace with actual password
 		'EvanDB');
 		$db2->connect();
+		///////////
 		
 		$month = $_POST['month'];
 		$year = $_POST['year'];

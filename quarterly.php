@@ -1,14 +1,33 @@
 <?php 
+	/**
+	 * PEP Capping 2017 Algozzine's Class
+	 *
+	 * Allows users to view Quarterly report figures.
+	 *
+	 * Displays all information required in the Quarterly
+	 * reports, formatted into a series of tables.
+	 * Users can select the quarter and year from the dropdowns
+	 * at the top, then hit the "Generate Report" to populate
+	 * the table with values from the database.
+	 *
+	 * @author Daniel Ahl
+	 *		   Rafael Mormol
+	 * @copyright 2017 Marist College
+	 * @version 0.1.4.2
+	 * @since 0.1.4.1
+	 */
     authorizedPage();
    
     global $params, $route, $view;
    
     include('header.php'); 
    
+   //REPLACE THIS WITH REAL DATABASE
     $db2 = new Database('localhost', '5432',
-		'postgres', 'admin', // replace with actual password
+		'postgres', 'admin',
 		'EvanDB');
 	$db2->connect();
+	///////////
 	
 	$MIN_FAVOR_SCORE = 7;
 	
@@ -49,9 +68,6 @@
 					
 		$sTotalResults = pg_fetch_all($db2->query($sTotalQuery, []))[0];
 		$sFavorResults = pg_fetch_all($db2->query($sFavorQuery, []))[0];
-		
-		#echo print_r($sTotalResults);
-		#echo print_r($sFavorResults);
 	}
 ?>
 <div class="container">

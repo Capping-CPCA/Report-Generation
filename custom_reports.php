@@ -4,15 +4,16 @@
 	 *
 	 * Allows users to create a custom report.
 	 *
-	 * This page has a form that allows users to specify what
-	 * information they would like to see in a custom report.
+	 * This allows users to specify what information they would 
+	 * like to see in a custom report.
 	 * The 'Generate Report' button will kick off a custom query
 	 * to the database and display the results in a new page
 	 * (defined in 'custom_reports_table.php')
 	 *
-	 * @author Daniel Ahl & Rafael Mormol
+	 * @author Daniel Ahl
+	 *		   Rafael Mormol
 	 * @copyright 2017 Marist College
-	 * @version 0.1.4.1
+	 * @version 0.1.4.2
 	 * @since 0.1.4.1
 	 */
 		authorizedPage();
