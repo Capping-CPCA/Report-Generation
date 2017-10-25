@@ -3,10 +3,12 @@
    global $params, $route, $view;
    include('header.php'); 
    
+   //REPLACE THIS WITH REAL DATABASE
    $db2 = new Database('localhost', '5432',
 		'postgres', 'admin', 
 		'EvanDB');
 	$db2->connect();
+	///////////
 	
 	$month = "";
 	$year = "";	
@@ -52,9 +54,9 @@
 		$fYearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
 		
 		#Age Where clauses
-		$_20Where = "(date_part('year', AGE(dateofbirth)) <= 20)
+		$_20Where = "(date_part('year', AGE(dateofbirth)) >= 20)
 				AND (date_part('year', AGE(dateofbirth)) <= 40)";
-		$_41Where = "(date_part('year', AGE(dateofbirth)) <= 41)
+		$_41Where = "(date_part('year', AGE(dateofbirth)) >= 41)
 				AND (date_part('year', AGE(dateofbirth)) <= 64)";
 		$_65Where = "(date_part('year', AGE(dateofbirth)) >= 65)";
 		
@@ -608,7 +610,7 @@
 					<?php if (isset($pDupRes)) echo $pDupRes; else echo "";?>
 				</td>
 				<td>
-					<?php if (isset($pYearRes)) echo $pDupRes; else echo "";?>
+					<?php if (isset($pYearRes)) echo $pYearRes; else echo "";?>
 				</td>
 			</tr>
 		</tbody>
