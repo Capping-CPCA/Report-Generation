@@ -514,7 +514,7 @@
 		$numChildDupRes = $numChildMonthRes - $numChildNewRes;
 		
 		#Num of Classes
-		$baseQuery = "SELECT COUNT(DISTINCT(date)) FROM participantsenrolled ";
+		$baseQuery = "SELECT COUNT(DISTINCT(date ::DATE)) FROM participantsenrolled ";
 		$query = $baseQuery . "WHERE $monthWhere AND $yearWhere;";
 		$numClassMonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
 		$query = $baseQuery . "WHERE $yearWhere;";
@@ -1914,7 +1914,7 @@
 
 </div>
 <script>
-	const MIN_YEAR = 2010;
+	const NUM_YEARS_BACK = 4;
 
 	window.onload = initPage;
 
@@ -1923,10 +1923,10 @@
 		var monthElem = document.getElementById("month");
 		var yearElem = document.getElementById("year");
 		var year = d.getFullYear();
-		for (y = year; y >= MIN_YEAR; y--) {
+		for (i = 0; i <= NUM_YEARS_BACK; i++) {
 			var opt = document.createElement('option');
-			opt.value = y;
-			opt.innerHTML = y;
+			opt.value = year - i;
+			opt.innerHTML = year - i;
 			yearElem.appendChild(opt);
 		}
 		display = document.getElementById("date_display").innerHTML;
@@ -1965,19 +1965,6 @@
 			var y = parseInt(display.substr(display.length - 4));
 			yearElem.selectedIndex = year - y;
 		}
-		/*
-		var d = new Date();
-		var monthElem = document.getElementById("month");
-		monthElem.selectedIndex = d.getMonth();
-		var yearElem = document.getElementById("year");
-		var year = d.getFullYear();
-		for (y = year; y >= MIN_YEAR; y--) {
-			var opt = document.createElement('option');
-			opt.value = y;
-			opt.innerHTML = y;
-			yearElem.appendChild(opt);
-		}
-		*/
 	}
 </script>
 <?php include('footer.php'); ?>

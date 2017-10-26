@@ -178,7 +178,7 @@
 	</div>
 </div>
 <script>
-	const MIN_YEAR = 2010;
+	const NUM_YEARS_BACK = 4;
 	
 	window.onload = initPage;
 	
@@ -188,10 +188,10 @@
 		monthElem.selectedIndex = d.getMonth();
 		var yearElem = document.getElementById("year");
 		var year = d.getFullYear();
-		for (y = year; y >= MIN_YEAR; y--) {
+		for (i = 0; i <= NUM_YEARS_BACK; i++) {
 			var opt = document.createElement('option');
-			opt.value = y;
-			opt.innerHTML = y;
+			opt.value = year - i;
+			opt.innerHTML = year - i;
 			yearElem.appendChild(opt);
 		}
 	}
