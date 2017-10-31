@@ -1967,4 +1967,26 @@
 		}
 	}
 </script>
+<style>
+@media print{
+	#main-content {
+		overflow: visible;
+	}
+	body{
+		overflow: visible;
+	}
+	.navbar {
+		display: none;
+	}
+	.side-menu {
+		display: none;
+	}
+	.btn {
+		display: none;
+	}
+	.form-group {
+		display: none;
+	}
+}
+</style>
 <?php include('footer.php'); ?>

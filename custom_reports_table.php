@@ -13,7 +13,7 @@
 	 * @version 0.1.4.2
 	 * @since 0.1.4.1
 	 */
-		 
+		
 		authorizedPage();
 		if ($_SERVER['REQUEST_METHOD'] !== 'POST') header('Location: custom-reports');
 		global $params, $route, $view;
@@ -192,7 +192,13 @@
 		</table>
 	</div>
 	<div class="container" align="center">
-		<a href="custom-reports" class="btn cpca">Run Another Report</a>
+		<form action="custom-reports" method="POST" autocomplete="on">
+			<input type="hidden" name="month" value="<?= $_POST['month']?>" />
+			<input type="hidden" name="year" value="<?=$_POST['year']?>" />
+			<input type="hidden" name="minAge" value="<?= $_POST['minAge']?>" />
+			<input type="hidden" name="maxAge" value="<?= $_POST['maxAge']?>" />
+			<button type="submit" class="btn cpca">Run Another Report</button>
+		</form>
 	</div>
 </div>
 <?php include('footer.php'); ?>

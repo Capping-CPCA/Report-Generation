@@ -19,6 +19,7 @@
 		authorizedPage();
 		global $params, $route, $view;
 		include('header.php');
+			
 	?>
 <div class="container py-5">
 	<div class="col-auto" >

@@ -61,9 +61,6 @@
 					
 		$sTotalResults = pg_fetch_all($db2->query($sTotalQuery, []))[0];
 		$sFavorResults = pg_fetch_all($db2->query($sFavorQuery, []))[0];
-		
-		#echo print_r($sTotalResults);
-		#echo print_r($sFavorResults);
 	}
 ?>
 <div class="container">
@@ -215,4 +212,27 @@
 		}
 	}
 </script>
+</script>
+<style>
+@media print{
+	#main-content {
+		overflow: visible;
+	}
+	body{
+		overflow: visible;
+	}
+	.navbar {
+		display: none;
+	}
+	.side-menu {
+		display: none;
+	}
+	.btn {
+		display: none;
+	}
+	.form-group {
+		display: none;
+	}
+}
+</style>
 <?php include('footer.php'); ?>
