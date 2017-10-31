@@ -18,16 +18,9 @@
 	 */
     authorizedPage();
    
-    global $params, $route, $view;
+    global $params, $route, $view, $db;
    
     include('header.php'); 
-   
-   //REPLACE THIS WITH REAL DATABASE
-    $db2 = new Database('localhost', '5432',
-		'postgres', 'admin', // replace with actual password
-		'EvanDB');
-	$db2->connect();
-	///////////
 	
 	$MIN_FAVOR_SCORE = 7;
 	
@@ -45,9 +38,9 @@
 		if ($isHalf === "true") {
 			$pWhere .= "AND date_part('month', participantclassattendance.date) < 6 "; 
 		}
-		$pWhere .= "AND participantclassattendance.firstclass = TRUE)";
+		$pWhere .= "AND participantclassattendance.isnew = TRUE)";
 		$pQuery = "SELECT COUNT(DISTINCT(participantclassattendance.participantid)) FROM participantclassattendance WHERE $pWhere";
-		$pResult = pg_fetch_result($db2->query($pQuery, []), 0, 0);
+		$pResult = pg_fetch_result($db->query($pQuery, []), 0, 0);
 		
 		$pIDQuery = "SELECT DISTINCT(participantclassattendance.participantid) FROM participantclassattendance WHERE $pWhere";
 		$formIDQuery = "SELECT DISTINCT(formid) FROM participantsformdetails WHERE participantid IN ($pIDQuery)";
@@ -59,8 +52,8 @@
 		$sTotalQuery = $sBaseQuery . "WHERE surveyid IN ($formIDQuery) ";
 		$sFavorQuery = $sTotalQuery . "AND ($sInFavor)";
 					
-		$sTotalResults = pg_fetch_all($db2->query($sTotalQuery, []))[0];
-		$sFavorResults = pg_fetch_all($db2->query($sFavorQuery, []))[0];
+		$sTotalResults = pg_fetch_all($db->query($sTotalQuery, []))[0];
+		$sFavorResults = pg_fetch_all($db->query($sFavorQuery, []))[0];
 	}
 ?>
 <div class="container">

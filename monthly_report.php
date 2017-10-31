@@ -17,15 +17,8 @@
 	 * @since 0.1.4.1
 	 */
    authorizedPage();
-   global $params, $route, $view;
+   global $params, $route, $view, $db;
    include('header.php'); 
-   
-   //REPLACE THIS WITH REAL DATABASE
-   $db2 = new Database('localhost', '5432',
-		'postgres', 'admin', 
-		'EvanDB');
-	$db2->connect();
-	///////////
 	
 	$month = "";
 	$year = "";	
@@ -33,20 +26,20 @@
 	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		$year = $_POST["year"];
 		$month = $_POST["month"];
-		$monthWhere = "(date_part('month', date) = $month)";
-		$yearWhere = "(date_part('year', date) = $year)";
-		$pNewWhere = "(firstclass = TRUE)";
+		$monthWhere = "(date_part('month', classdate) = $month)";
+		$yearWhere = "(date_part('year', classdate) = $year)";
+		$pNewWhere = "(isnew = TRUE)";
 		
 		#Total Participant Queries
-		$pBaseQuery = "SELECT COUNT(DISTINCT(participantid)) FROM participantsenrolled ";
+		$pBaseQuery = "SELECT COUNT(DISTINCT(pid)) FROM classattendancedetails ";
 		
 		$pMonthQuery = $pBaseQuery . "WHERE " . $monthWhere . " AND " . $yearWhere;
-		$pMonthRes = pg_fetch_result($db2->query($pMonthQuery ,[]), 0, 0);
+		$pMonthRes = pg_fetch_result($db->query($pMonthQuery ,[]), 0, 0);
 		$pNewQuery = $pBaseQuery . "WHERE " . $monthWhere . " AND " . $yearWhere . " AND " . $pNewWhere;
-		$pNewRes = pg_fetch_result($db2->query($pNewQuery ,[]), 0, 0);
+		$pNewRes = pg_fetch_result($db->query($pNewQuery ,[]), 0, 0);
 		$pDupRes = $pMonthRes - $pNewRes;
 		$pYearQuery = $pBaseQuery . "WHERE " . $yearWhere;
-		$pYearRes = pg_fetch_result($db2->query($pYearQuery ,[]), 0, 0);
+		$pYearRes = pg_fetch_result($db->query($pYearQuery ,[]), 0, 0);
 		
 		#Gender Where clauses
 		$femaleWhere = "(sex = 'Female')";
@@ -54,21 +47,21 @@
 		
 		#Male Queries
 		$query = $pMonthQuery . " AND $maleWhere ";
-		$mMonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$mMonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND $maleWhere ";
-		$mNewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$mNewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$mDupRes = $mMonthRes - $mNewRes;
 		$query = $pYearQuery . " AND $maleWhere ";
-		$mYearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$mYearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		#Female Queries
 		$query = $pMonthQuery . " AND $femaleWhere ";
-		$fMonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$fMonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND $femaleWhere ";
-		$fNewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$fNewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$fDupRes = $fMonthRes - $fNewRes;
 		$query = $pYearQuery . " AND $femaleWhere ";
-		$fYearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$fYearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		#Age Where clauses
 		$_20Where = "(date_part('year', AGE(dateofbirth)) >= 20)
@@ -79,30 +72,30 @@
 		
 		#20-41 Queries
 		$query = $pMonthQuery . " AND $_20Where ";
-		$_20MonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_20MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND $_20Where ";
-		$_20NewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_20NewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$_20DupRes = $_20MonthRes - $_20NewRes;
 		$query = $pYearQuery . " AND $_20Where ";
-		$_20YearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_20YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		#41-64 Queries
 		$query = $pMonthQuery . " AND $_41Where ";
-		$_41MonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_41MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND $_41Where ";
-		$_41NewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_41NewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$_41DupRes = $_41MonthRes - $_41NewRes;
 		$query = $pYearQuery . " AND $_41Where ";
-		$_41YearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_41YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		#65+ Queries
 		$query = $pMonthQuery . " AND $_65Where ";
-		$_65MonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_65MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND $_65Where ";
-		$_65NewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_65NewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$_65DupRes = $_65MonthRes - $_65NewRes;
 		$query = $pYearQuery . " AND $_65Where ";
-		$_65YearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_65YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		#Ethnicity Where clauses
 		$afrAmWhere = " race = 'African American' ";
@@ -115,347 +108,347 @@
 		
 		#Caucasian Queries
 		$query = $pMonthQuery . " AND $caucWhere ";
-		$caucMonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$caucMonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND $caucWhere ";
-		$caucNewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$caucNewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$caucDupRes = $caucMonthRes - $caucNewRes;
 		$query = $pYearQuery . " AND $caucWhere ";
-		$caucYearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$caucYearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		#African American Queries
 		$query = $pMonthQuery . " AND $afrAmWhere ";
-		$afAmMonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$afAmMonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND $afrAmWhere ";
-		$afAmNewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$afAmNewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$afAmDupRes = $afAmMonthRes - $afAmNewRes;
 		$query = $pYearQuery . " AND $afrAmWhere ";
-		$afAmYearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$afAmYearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		#Multi-Racial
 		$query = $pMonthQuery . " AND $multRacWhere ";
-		$multRacMonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$multRacMonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND $multRacWhere ";
-		$multRacNewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$multRacNewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$multRacDupRes = $multRacMonthRes - $multRacNewRes;
 		$query = $pYearQuery . " AND $multRacWhere ";
-		$multRacYearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$multRacYearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		#Latino
 		$query = $pMonthQuery . " AND $latWhere ";
-		$latMonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$latMonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND $latWhere ";
-		$latNewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$latNewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$latDupRes = $latMonthRes - $latNewRes;
 		$query = $pYearQuery . " AND $latWhere ";
-		$latYearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$latYearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		#Pacific Islander
 		$query = $pMonthQuery . " AND $pacIslWhere ";
-		$pacIslMonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$pacIslMonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND $pacIslWhere ";
-		$pacIslNewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$pacIslNewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$pacIslDupRes = $pacIslMonthRes - $pacIslNewRes;
 		$query = $pYearQuery . " AND $pacIslWhere ";
-		$pacIslYearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$pacIslYearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 
 		#Native American
 		$query = $pMonthQuery . " AND $natAmWhere ";
-		$natAmMonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$natAmMonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND $natAmWhere ";
-		$natAmNewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$natAmNewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$natAmDupRes = $natAmMonthRes - $natAmNewRes;
 		$query = $pYearQuery . " AND $natAmWhere ";
-		$natAmYearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);	
+		$natAmYearRes = pg_fetch_result($db->query($query ,[]), 0, 0);	
 
 		#Other Races
 		$query = $pMonthQuery . " AND $otherRacWhere ";
-		$otherRacMonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$otherRacMonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND $otherRacWhere ";
-		$otherRacNewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$otherRacNewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$otherRacDupRes = $otherRacMonthRes - $otherRacNewRes;
 		$query = $pYearQuery . " AND $otherRacWhere ";
-		$otherRacYearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$otherRacYearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		#Zip Codes
 		$query = $pMonthQuery . " AND zipcode = 12501 ";
-		$_12501MonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12501MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND zipcode = 12501 ";
-		$_12501NewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12501NewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$_12501DupRes = $_12501MonthRes - $_12501NewRes;
 		$query = $pYearQuery . " AND zipcode = 12501 ";
-		$_12501YearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12501YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		$query = $pMonthQuery . " AND zipcode = 12504 ";
-		$_12504MonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12504MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND zipcode = 12504 ";
-		$_12504NewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12504NewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$_12504DupRes = $_12504MonthRes - $_12504NewRes;
 		$query = $pYearQuery . " AND zipcode = 12504 ";
-		$_12504YearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12504YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		$query = $pMonthQuery . " AND zipcode = 12506 ";
-		$_12506MonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12506MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND zipcode = 12506 ";
-		$_12506NewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12506NewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$_12506DupRes = $_12506MonthRes - $_12506NewRes;
 		$query = $pYearQuery . " AND zipcode = 12506 ";
-		$_12506YearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12506YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		$query = $pMonthQuery . " AND zipcode = 12507 ";
-		$_12507MonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12507MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND zipcode = 12507 ";
-		$_12507NewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12507NewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$_12507DupRes = $_12507MonthRes - $_12507NewRes;
 		$query = $pYearQuery . " AND zipcode = 12507 ";
-		$_12507YearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12507YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		$query = $pMonthQuery . " AND zipcode = 12508 ";
-		$_12508MonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12508MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND zipcode = 12508 ";
-		$_12508NewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12508NewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$_12508DupRes = $_12508MonthRes - $_12508NewRes;
 		$query = $pYearQuery . " AND zipcode = 12508 ";
-		$_12508YearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12508YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		$query = $pMonthQuery . " AND zipcode = 12514 ";
-		$_12514MonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12514MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND zipcode = 12514 ";
-		$_12514NewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12514NewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$_12514DupRes = $_12514MonthRes - $_12514NewRes;
 		$query = $pYearQuery . " AND zipcode = 12514 ";
-		$_12514YearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12514YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		$query = $pMonthQuery . " AND zipcode = 12522 ";
-		$_12522MonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12522MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND zipcode = 12522 ";
-		$_12522NewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12522NewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$_12522DupRes = $_12522MonthRes - $_12522NewRes;
 		$query = $pYearQuery . " AND zipcode = 12522 ";
-		$_12522YearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12522YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		$query = $pMonthQuery . " AND zipcode = 12524 ";
-		$_12524MonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12524MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND zipcode = 12524 ";
-		$_12524NewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12524NewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$_12524DupRes = $_12524MonthRes - $_12524NewRes;
 		$query = $pYearQuery . " AND zipcode = 12524 ";
-		$_12524YearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12524YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		$query = $pMonthQuery . " AND zipcode = 12531 ";
-		$_12531MonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12531MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND zipcode = 12531 ";
-		$_12531NewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12531NewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$_12531DupRes = $_12531MonthRes - $_12531NewRes;
 		$query = $pYearQuery . " AND zipcode = 12531 ";
-		$_12531YearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12531YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		$query = $pMonthQuery . " AND zipcode = 12533 ";
-		$_12533MonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12533MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND zipcode = 12533 ";
-		$_12533NewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12533NewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$_12533DupRes = $_12533MonthRes - $_12533NewRes;
 		$query = $pYearQuery . " AND zipcode = 12533 ";
-		$_12533YearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12533YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		$query = $pMonthQuery . " AND zipcode = 12537 ";
-		$_12537MonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12537MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND zipcode = 12537 ";
-		$_12537NewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12537NewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$_12537DupRes = $_12537MonthRes - $_12537NewRes;
 		$query = $pYearQuery . " AND zipcode = 12537 ";
-		$_12537YearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12537YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		$query = $pMonthQuery . " AND zipcode = 12538 ";
-		$_12538MonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12538MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND zipcode = 12538 ";
-		$_12538NewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12538NewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$_12538DupRes = $_12538MonthRes - $_12538NewRes;
 		$query = $pYearQuery . " AND zipcode = 12538 ";
-		$_12538YearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12538YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		$query = $pMonthQuery . " AND zipcode = 12540 ";
-		$_12540MonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12540MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND zipcode = 12540 ";
-		$_12540NewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12540NewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$_12540DupRes = $_12540MonthRes - $_12540NewRes;
 		$query = $pYearQuery . " AND zipcode = 12540 ";
-		$_12540YearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12540YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		$query = $pMonthQuery . " AND zipcode = 12545 ";
-		$_12545MonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12545MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND zipcode = 12545 ";
-		$_12545NewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12545NewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$_12545DupRes = $_12545MonthRes - $_12545NewRes;
 		$query = $pYearQuery . " AND zipcode = 12545 ";
-		$_12545YearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12545YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		$query = $pMonthQuery . " AND zipcode = 12546 ";
-		$_12546MonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12546MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND zipcode = 12546 ";
-		$_12546NewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12546NewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$_12546DupRes = $_12546MonthRes - $_12546NewRes;
 		$query = $pYearQuery . " AND zipcode = 12546 ";
-		$_12546YearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12546YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		$query = $pMonthQuery . " AND zipcode = 12564 ";
-		$_12564MonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12564MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND zipcode = 12564 ";
-		$_12564NewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12564NewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$_12564DupRes = $_12564MonthRes - $_12564NewRes;
 		$query = $pYearQuery . " AND zipcode = 12564 ";
-		$_12564YearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12564YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		$query = $pMonthQuery . " AND zipcode = 12567 ";
-		$_12567MonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12567MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND zipcode = 12567 ";
-		$_12567NewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12567NewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$_12567DupRes = $_12567MonthRes - $_12567NewRes;
 		$query = $pYearQuery . " AND zipcode = 12567 ";
-		$_12567YearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12567YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		$query = $pMonthQuery . " AND zipcode = 12569 ";
-		$_12569MonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12569MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND zipcode = 12569 ";
-		$_12569NewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12569NewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$_12569DupRes = $_12569MonthRes - $_12569NewRes;
 		$query = $pYearQuery . " AND zipcode = 12569 ";
-		$_12569YearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12569YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		$query = $pMonthQuery . " AND zipcode = 12570 ";
-		$_12570MonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12570MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND zipcode = 12570 ";
-		$_12570NewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12570NewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$_12570DupRes = $_12570MonthRes - $_12570NewRes;
 		$query = $pYearQuery . " AND zipcode = 12570 ";
-		$_12570YearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12570YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		$query = $pMonthQuery . " AND zipcode = 12571 ";
-		$_12571MonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12571MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND zipcode = 12571 ";
-		$_12571NewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12571NewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$_12571DupRes = $_12571MonthRes - $_12571NewRes;
 		$query = $pYearQuery . " AND zipcode = 12571 ";
-		$_12571YearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12571YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		$query = $pMonthQuery . " AND zipcode = 12572 ";
-		$_12572MonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12572MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND zipcode = 12572 ";
-		$_12572NewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12572NewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$_12572DupRes = $_12572MonthRes - $_12572NewRes;
 		$query = $pYearQuery . " AND zipcode = 12572 ";
-		$_12572YearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12572YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		$query = $pMonthQuery . " AND zipcode = 12574 ";
-		$_12574MonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12574MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND zipcode = 12574 ";
-		$_12574NewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12574NewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$_12574DupRes = $_12574MonthRes - $_12574NewRes;
 		$query = $pYearQuery . " AND zipcode = 12574 ";
-		$_12574YearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12574YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		$query = $pMonthQuery . " AND zipcode = 12578 ";
-		$_12578MonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12578MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND zipcode = 12578 ";
-		$_12578NewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12578NewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$_12578DupRes = $_12578MonthRes - $_12578NewRes;
 		$query = $pYearQuery . " AND zipcode = 12578 ";
-		$_12578YearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12578YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		$query = $pMonthQuery . " AND zipcode = 12580 ";
-		$_12580MonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12580MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND zipcode = 12580 ";
-		$_12580NewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12580NewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$_12580DupRes = $_12580MonthRes - $_12580NewRes;
 		$query = $pYearQuery . " AND zipcode = 12580 ";
-		$_12580YearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12580YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		$query = $pMonthQuery . " AND zipcode = 12581 ";
-		$_12581MonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12581MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND zipcode = 12581 ";
-		$_12581NewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12581NewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$_12581DupRes = $_12581MonthRes - $_12581NewRes;
 		$query = $pYearQuery . " AND zipcode = 12581 ";
-		$_12581YearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12581YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		$query = $pMonthQuery . " AND zipcode = 12582 ";
-		$_12582MonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12582MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND zipcode = 12582 ";
-		$_12582NewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12582NewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$_12582DupRes = $_12582MonthRes - $_12582NewRes;
 		$query = $pYearQuery . " AND zipcode = 12582 ";
-		$_12582YearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12582YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		$query = $pMonthQuery . " AND zipcode = 12583 ";
-		$_12583MonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12583MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND zipcode = 12583 ";
-		$_12583NewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12583NewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$_12583DupRes = $_12583MonthRes - $_12583NewRes;
 		$query = $pYearQuery . " AND zipcode = 12583 ";
-		$_12583YearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12583YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		$query = $pMonthQuery . " AND zipcode = 12585 ";
-		$_12585MonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12585MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND zipcode = 12585 ";
-		$_12585NewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12585NewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$_12585DupRes = $_12585MonthRes - $_12585NewRes;
 		$query = $pYearQuery . " AND zipcode = 12585 ";
-		$_12585YearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12585YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		$query = $pMonthQuery . " AND zipcode = 12590 ";
-		$_12590MonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12590MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND zipcode = 12590 ";
-		$_12590NewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12590NewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$_12590DupRes = $_12590MonthRes - $_12590NewRes;
 		$query = $pYearQuery . " AND zipcode = 12590 ";
-		$_12590YearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12590YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		$query = $pMonthQuery . " AND zipcode = 12592 ";
-		$_12592MonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12592MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND zipcode = 12592 ";
-		$_12592NewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12592NewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$_12592DupRes = $_12592MonthRes - $_12592NewRes;
 		$query = $pYearQuery . " AND zipcode = 12592 ";
-		$_12592YearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12592YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		$query = $pMonthQuery . " AND zipcode = 12594 ";
-		$_12594MonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12594MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND zipcode = 12594 ";
-		$_12594NewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12594NewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$_12594DupRes = $_12594MonthRes - $_12594NewRes;
 		$query = $pYearQuery . " AND zipcode = 12594 ";
-		$_12594YearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12594YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		$query = $pMonthQuery . " AND zipcode = 12601 ";
-		$_12601MonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12601MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND zipcode = 12601 ";
-		$_12601NewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12601NewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$_12601DupRes = $_12601MonthRes - $_12601NewRes;
 		$query = $pYearQuery . " AND zipcode = 12601 ";
-		$_12601YearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12601YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		$query = $pMonthQuery . " AND zipcode = 12602 ";
-		$_12602MonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12602MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND zipcode = 12602 ";
-		$_12602NewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12602NewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$_12602DupRes = $_12602MonthRes - $_12602NewRes;
 		$query = $pYearQuery . " AND zipcode = 12602 ";
-		$_12602YearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12602YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		$query = $pMonthQuery . " AND zipcode = 12603 ";
-		$_12603MonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12603MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND zipcode = 12603 ";
-		$_12603NewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12603NewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$_12603DupRes = $_12603MonthRes - $_12603NewRes;
 		$query = $pYearQuery . " AND zipcode = 12603 ";
-		$_12603YearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12603YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		$query = $pMonthQuery . " AND zipcode = 12604 ";
-		$_12604MonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12604MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND zipcode = 12604 ";
-		$_12604NewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12604NewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$_12604DupRes = $_12604MonthRes - $_12604NewRes;
 		$query = $pYearQuery . " AND zipcode = 12604 ";
-		$_12604YearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$_12604YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		$otherZipWhere = "(zipcode <> 12501
 							AND zipcode <> 12504
@@ -493,32 +486,32 @@
 							AND zipcode <> 12603
 							AND zipcode <> 12604)";
 		$query = $pMonthQuery . " AND $otherZipWhere";
-		$otherMonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$otherMonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND $otherZipWhere";
-		$otherNewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$otherNewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$otherDupRes = $otherMonthRes - $otherNewRes;
 		$query = $pYearQuery . " AND $otherZipWhere";
-		$otherYearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$otherYearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 		#Children Served Indirectly
-		$baseQuery = "SELECT SUM(numchildren) FROM participantsenrolled
-						WHERE participantid IN (
-							SELECT DISTINCT(participantid) FROM participantsenrolled
+		$baseQuery = "SELECT SUM(numchildren) FROM classattendancedetails
+						WHERE pid IN (
+							SELECT DISTINCT(pid) FROM classattendancedetails
 							WHERE $yearWhere ";
 		$query = $baseQuery . " AND $monthWhere); ";
-		$numChildMonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$numChildMonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $baseQuery . ");";
-		$numChildYearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$numChildYearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $baseQuery . " AND $monthWhere AND $pNewWhere); ";
-		$numChildNewRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$numChildNewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$numChildDupRes = $numChildMonthRes - $numChildNewRes;
 		
 		#Num of Classes
-		$baseQuery = "SELECT COUNT(DISTINCT(date ::DATE)) FROM participantsenrolled ";
+		$baseQuery = "SELECT COUNT(DISTINCT(classdate ::DATE)) FROM classattendancedetails ";
 		$query = $baseQuery . "WHERE $monthWhere AND $yearWhere;";
-		$numClassMonthRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$numClassMonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $baseQuery . "WHERE $yearWhere;";
-		$numClassYearRes = pg_fetch_result($db2->query($query ,[]), 0, 0);
+		$numClassYearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 	}
    ?>
