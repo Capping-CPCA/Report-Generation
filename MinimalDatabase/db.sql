@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS ParticipantsFormDetails;
 DROP TABLE IF EXISTS Surveys;
 DROP TABLE IF EXISTS ZipCodes;
 
-CREATE TYPE RACE AS ENUM ('African American', 'Native American', 'Pacific Islander', 'Caucasian', 'Multi-Racial', 'Other', 'Latino');
+CREATE TYPE RACE AS ENUM ('African American', 'Native American', 'Pacific Islander', 'Caucasian', 'Multi Racial', 'Other', 'Latino');
 CREATE TYPE SEX AS ENUM ('Male', 'Female');
 
 --Missing field: Middle Init

@@ -102,7 +102,7 @@
 		$natAmWhere = " race = 'Native American' ";
 		$pacIslWhere = " race = 'Pacific Islander' ";
 		$caucWhere = " race = 'Caucasian' ";
-		$multRacWhere = " race = 'Multi-Racial' ";
+		$multRacWhere = " race = 'Multi Racial' ";
 		$latWhere = " race = 'Latino' ";
 		$otherRacWhere = " race = 'Other' ";
 		
@@ -124,7 +124,7 @@
 		$query = $pYearQuery . " AND $afrAmWhere ";
 		$afAmYearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
-		#Multi-Racial
+		#Multi Racial
 		$query = $pMonthQuery . " AND $multRacWhere ";
 		$multRacMonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND $multRacWhere ";

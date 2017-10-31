@@ -109,7 +109,7 @@
 						</div>
 						<div class="checkbox">
 							<label for="race-2">
-							<input type="checkbox" name="race[]" id="race-2" value="Multi-Racial">
+							<input type="checkbox" name="race[]" id="race-2" value="Multi Racial">
 							Multi Racial
 							</label>
 						</div>
