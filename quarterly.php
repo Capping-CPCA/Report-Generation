@@ -18,10 +18,10 @@
 	 */
     authorizedPage();
    
-    global $params, $route, $view, $db;
+    global $db;
    
     include('header.php');
-
+	
 	$MIN_FAVOR_SCORE = 7;
 	
 	$pResult = "";

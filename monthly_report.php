@@ -17,7 +17,7 @@
 	 * @since 0.1.4.1
 	 */
    authorizedPage();
-   global $params, $route, $view, $db;
+   global $db;
    include('header.php'); 
 	
 	$month = "";
@@ -102,7 +102,7 @@
 		$natAmWhere = " race = 'Native American' ";
 		$pacIslWhere = " race = 'Pacific Islander' ";
 		$caucWhere = " race = 'Caucasian' ";
-		$multRacWhere = " race = 'Multi-Racial' ";
+		$multRacWhere = " race = 'Multi Racial' ";
 		$latWhere = " race = 'Latino' ";
 		$otherRacWhere = " race = 'Other' ";
 		
@@ -514,7 +514,7 @@
 		$numClassYearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
 	}
-   ?>
+?>
 <div class="container">
 	<div class="container pt-5">
 		<form action="" method="POST" autocomplete="on">

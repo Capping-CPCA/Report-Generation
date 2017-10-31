@@ -17,10 +17,10 @@
 	 * @since 0.1.4.1
 	 */
 		authorizedPage();
-		global $params, $route, $view;
+		
 		include('header.php');
 			
-	?>
+?>
 <div class="container py-5">
 	<div class="col-auto" >
 		<form action="custom-reports-table" method="POST" autocomplete="on">
@@ -109,7 +109,7 @@
 						</div>
 						<div class="checkbox">
 							<label for="race-2">
-							<input type="checkbox" name="race[]" id="race-2" value="Multi-Racial">
+							<input type="checkbox" name="race[]" id="race-2" value="Multi Racial">
 							Multi Racial
 							</label>
 						</div>

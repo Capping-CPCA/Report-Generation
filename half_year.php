@@ -18,7 +18,7 @@
 	 */
     authorizedPage();
    
-    global $params, $route, $view, $db;
+    global $db;
    
     include('header.php'); 
 	

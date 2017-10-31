@@ -16,9 +16,11 @@
 		
 		authorizedPage();
 		if ($_SERVER['REQUEST_METHOD'] !== 'POST') header('Location: custom-reports');
-		global $params, $route, $view, $db;
-		include('header.php');
 		
+		global $db;
+		
+		include('header.php');
+	
 		$month = $_POST['month'];
 		$year = $_POST['year'];
 		$locs = isset($_POST['location']) ? $_POST['location'] : [];
@@ -74,77 +76,79 @@
 					ON participants.participantid = participantclassattendance.participantid
 					WHERE ";
 					
-		echo $baseQuery . $newWhereClause;
 		$monthRes = pg_fetch_result($db->query($baseQuery . $monthWhereClause, []), 0, 0);
 		$newRes = pg_fetch_result($db->query($baseQuery . $newWhereClause, []), 0, 0);
 		$duplRes = $monthRes - $newRes;
 		$yearRes = pg_fetch_result($db->query($baseQuery . $yearWhereClause, []), 0, 0);
-		?>
+?>
 <div class="container">
 	<div class="container py-2">
 		<div align="center">
-			<h2><?php
-				switch ($month) {
-					case 1: echo "January";
-							break;
-					case 2: echo "February";
-							break;
-					case 3: echo "March";
-							break;
-					case 4: echo "April";
-							break;
-					case 5: echo "May";
-							break;
-					case 6: echo "June";
-							break;
-					case 7: echo "July";
-							break;
-					case 8: echo "August";
-							break;
-					case 9: echo "September";
-							break;
-					case 10: echo "October";
-							break;
-					case 11: echo "November";
-							break;
-					case 12: echo "December";
-							break;
-				}
-				?> <?=$year?></h2>
+			<h2>
+				<?php
+			switch ($month) {
+				case 1: echo "January";
+						break;
+				case 2: echo "February";
+						break;
+				case 3: echo "March";
+						break;
+				case 4: echo "April";
+						break;
+				case 5: echo "May";
+						break;
+				case 6: echo "June";
+						break;
+				case 7: echo "July";
+						break;
+				case 8: echo "August";
+						break;
+				case 9: echo "September";
+						break;
+				case 10: echo "October";
+						break;
+				case 11: echo "November";
+						break;
+				case 12: echo "December";
+						break;
+			}
+			?>
+					<?=$year?>
+			</h2>
 		</div>
 		<div align="center">
 			<?php
-				#Display the chosen locations
-				if (count($locs) > 0) {
-					echo "<div><b>Locations:</b> " . $locs[0];
-					for ($i = 1; $i < count($locs); $i++) {
-						echo ", " . $locs[$i];
-					}
-					echo "</div>";
+			#Display the chosen locations
+			if (count($locs) > 0) {
+				echo "<div><b>Locations:</b> " . $locs[0];
+				for ($i = 1; $i < count($locs); $i++) {
+					echo ", " . $locs[$i];
 				}
-				
-				#Display the chosen races
-				if (count($races) > 0) {
-					echo "<div><b>Races:</b> " . $races[0];
-					for ($i = 1; $i < count($races); $i++) {
-						echo ", " . $races[$i];
-					}
-					echo "</div>";
+				echo "</div>";
+			}
+			
+			#Display the chosen races
+			if (count($races) > 0) {
+				echo "<div><b>Races:</b> " . $races[0];
+				for ($i = 1; $i < count($races); $i++) {
+					echo ", " . $races[$i];
 				}
-				
-				#Display the chosen ages
-				if ($minAge !== 'any' || $maxAge !=='any') {
-					if ($minAge === $maxAge) {
-						echo "<div><b>Age Range:</b> " . $maxAge . "</div>";
-					} elseif ($minAge === 'any') {
-						echo "<div><b>Age Range:</b> " . $maxAge . " and below</div>";
-					} elseif ($maxAge === 'any') {
-						echo "<div><b>Age Range:</b> " . $minAge . " and above</div>";
-					} else {
-						echo "<div><b>Age Range:</b> " . $minAge . " - " . $maxAge . "</div>";
-					}
+				echo "</div>";
+			}
+			
+			#Display the chosen ages
+			if ($minAge !== 'any' || $maxAge !=='any') {
+				if ($minAge === $maxAge) {
+					echo "<div><b>Age Range:</b> " . $maxAge . "</div>";
+				} elseif ($minAge === 'any') {
+					echo "<div><b>Age Range:</b> " . $maxAge . " and below</div>";
+				} elseif ($maxAge === 'any') {
+					echo "<div><b>Age Range:</b> " . $minAge . " and above</div>";
+				} else {
+					echo "<div><b>Age Range:</b> " . $minAge . " - " . $maxAge . "</div>";
 				}
-				?>
+			}
+			?>
 		</div>
 	</div>
 	<div class="container py-2">
