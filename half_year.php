@@ -63,16 +63,16 @@
 				<div class="col">
 					<div class="form-group">
 						<select class="form-control" name="half" id="half">
-                     <option value="true">Semi-Annual</option>
-                     <option value="false">Annual</option>
-                  </select>
+							<option value="true">Semi-Annual</option>
+							<option value="false">Annual</option>
+						</select>
 					</div>
 				</div>
 				<div class="col">
 					<div class="form-group">
 						<select class="form-control" name="year" id="year">
-				  <!-- Javascript below adds the options based on current year -->
-                  </select>
+						  <!-- Javascript below adds the options based on current year -->
+						</select>
 					</div>
 				</div>
 			</div>
