@@ -21,32 +21,23 @@
    include('header.php'); 
 	
 	$month = "";
-	$year = "";
-
+	$year = "";	
+	
 	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		$year = $_POST["year"];
 		$month = $_POST["month"];
-
-		# WHERE clause component used by all queries
 		$monthWhere = "(date_part('month', date) = $month)";
 		$yearWhere = "(date_part('year', date) = $year)";
 		$pNewWhere = "(isnew = TRUE)";
-
-		/*
-		 * Each query topic needs results for matching participants that are
-		 * new, duplicated, and a YTD
-		 */
 		
-		# Total Participant Queries
+		#Total Participant Queries
 		$pBaseQuery = "SELECT COUNT(DISTINCT(participantid)) FROM classattendancedetails ";
+		
 		$pMonthQuery = $pBaseQuery . "WHERE " . $monthWhere . " AND " . $yearWhere;
 		$pMonthRes = pg_fetch_result($db->query($pMonthQuery ,[]), 0, 0);
-		# New Participants Query
 		$pNewQuery = $pBaseQuery . "WHERE " . $monthWhere . " AND " . $yearWhere . " AND " . $pNewWhere;
 		$pNewRes = pg_fetch_result($db->query($pNewQuery ,[]), 0, 0);
-		# Duplicate Participants Query
 		$pDupRes = $pMonthRes - $pNewRes;
-		# YTD Participants
 		$pYearQuery = $pBaseQuery . "WHERE " . $yearWhere;
 		$pYearRes = pg_fetch_result($db->query($pYearQuery ,[]), 0, 0);
 		
@@ -72,14 +63,14 @@
 		$query = $pYearQuery . " AND $femaleWhere ";
 		$fYearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
-		#Age WHERE clauses component
+		#Age Where clauses
 		$_20Where = "(date_part('year', AGE(dateofbirth)) >= 20)
 				AND (date_part('year', AGE(dateofbirth)) <= 40)";
 		$_41Where = "(date_part('year', AGE(dateofbirth)) >= 41)
 				AND (date_part('year', AGE(dateofbirth)) <= 64)";
 		$_65Where = "(date_part('year', AGE(dateofbirth)) >= 65)";
 		
-		# Age 20-41 Queries
+		#20-41 Queries
 		$query = $pMonthQuery . " AND $_20Where ";
 		$_20MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND $_20Where ";
@@ -88,7 +79,7 @@
 		$query = $pYearQuery . " AND $_20Where ";
 		$_20YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
-		# Age 41-64 Queries
+		#41-64 Queries
 		$query = $pMonthQuery . " AND $_41Where ";
 		$_41MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND $_41Where ";
@@ -97,7 +88,7 @@
 		$query = $pYearQuery . " AND $_41Where ";
 		$_41YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
-		# Age 65+ Queries
+		#65+ Queries
 		$query = $pMonthQuery . " AND $_65Where ";
 		$_65MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND $_65Where ";
@@ -106,7 +97,7 @@
 		$query = $pYearQuery . " AND $_65Where ";
 		$_65YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
-		# Ethnicity WHERE clause components
+		#Ethnicity Where clauses
 		$afrAmWhere = " race = 'African American' ";
 		$natAmWhere = " race = 'Native American' ";
 		$pacIslWhere = " race = 'Pacific Islander' ";
@@ -115,7 +106,7 @@
 		$latWhere = " race = 'Latino' ";
 		$otherRacWhere = " race = 'Other' ";
 		
-		# Caucasian Queries
+		#Caucasian Queries
 		$query = $pMonthQuery . " AND $caucWhere ";
 		$caucMonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND $caucWhere ";
@@ -124,7 +115,7 @@
 		$query = $pYearQuery . " AND $caucWhere ";
 		$caucYearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
-		# African American Queries
+		#African American Queries
 		$query = $pMonthQuery . " AND $afrAmWhere ";
 		$afAmMonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND $afrAmWhere ";
@@ -133,7 +124,7 @@
 		$query = $pYearQuery . " AND $afrAmWhere ";
 		$afAmYearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
-		# Multi Racial
+		#Multi-Racial
 		$query = $pMonthQuery . " AND $multRacWhere ";
 		$multRacMonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND $multRacWhere ";
@@ -142,7 +133,7 @@
 		$query = $pYearQuery . " AND $multRacWhere ";
 		$multRacYearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
-		# Latino
+		#Latino
 		$query = $pMonthQuery . " AND $latWhere ";
 		$latMonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND $latWhere ";
@@ -151,7 +142,7 @@
 		$query = $pYearQuery . " AND $latWhere ";
 		$latYearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		
-		# Pacific Islander
+		#Pacific Islander
 		$query = $pMonthQuery . " AND $pacIslWhere ";
 		$pacIslMonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND $pacIslWhere ";
@@ -159,8 +150,8 @@
 		$pacIslDupRes = $pacIslMonthRes - $pacIslNewRes;
 		$query = $pYearQuery . " AND $pacIslWhere ";
 		$pacIslYearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
-		
-		# Native American
+
+		#Native American
 		$query = $pMonthQuery . " AND $natAmWhere ";
 		$natAmMonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND $natAmWhere ";
@@ -169,7 +160,7 @@
 		$query = $pYearQuery . " AND $natAmWhere ";
 		$natAmYearRes = pg_fetch_result($db->query($query ,[]), 0, 0);	
 
-		# Other Races
+		#Other Races
 		$query = $pMonthQuery . " AND $otherRacWhere ";
 		$otherRacMonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND $otherRacWhere ";
@@ -177,12 +168,8 @@
 		$otherRacDupRes = $otherRacMonthRes - $otherRacNewRes;
 		$query = $pYearQuery . " AND $otherRacWhere ";
 		$otherRacYearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
-
-		/* Monthly Reports include a table for around 30 specific local zipcodes
-		 * each with their own new/duplicate/YTD. The last entry of the table is
-		 * "Other" which should be any zipcode not in this pre-set list
-		 */
-		# Zip Codes
+		
+		#Zip Codes
 		$query = $pMonthQuery . " AND zipcode = 12501 ";
 		$_12501MonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $pNewQuery . " AND zipcode = 12501 ";
@@ -462,7 +449,7 @@
 		$_12604DupRes = $_12604MonthRes - $_12604NewRes;
 		$query = $pYearQuery . " AND zipcode = 12604 ";
 		$_12604YearRes = pg_fetch_result($db->query($query ,[]), 0, 0);
-
+		
 		$otherZipWhere = "(zipcode <> 12501
 							AND zipcode <> 12504
 							AND zipcode <> 12506
@@ -519,7 +506,7 @@
 		$numChildNewRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$numChildDupRes = $numChildMonthRes - $numChildNewRes;
 		
-		#Number of Classes
+		#Num of Classes
 		$baseQuery = "SELECT COUNT(DISTINCT(date ::DATE)) FROM classattendancedetails ";
 		$query = $baseQuery . "WHERE $monthWhere AND $yearWhere;";
 		$numClassMonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
@@ -553,8 +540,8 @@
 				<div class="col">
 					<div class="form-group">
 						<select class="form-control" name="year" id="year">
-							<!-- Javascript below adds the options based on current year -->
-						</select>
+						<!-- Javascript below adds the options based on current year -->
+                  </select>
 					</div>
 				</div>
 			</div>
@@ -569,8 +556,7 @@
 	</div>
 	<div class="page-header">
 		<div align="center">
-			<h2 id="date_display">
-			<?php
+			<h2 id="date_display"><?php
 				switch ($month) {
 					case 1: echo "January";
 							break;
@@ -597,8 +583,7 @@
 					case 12: echo "December";
 							break;
 				}
-			?> <?=$year?>
-			</h2>
+				?> <?=$year?></h2>
 		</div>
 	</div>
 	<br />
@@ -985,7 +970,7 @@
 			<tr>
 				<td>
 					<b>
-               12501
+               12501 
                </b>
 				</td>
 				<td>
@@ -1931,8 +1916,6 @@
 		var monthElem = document.getElementById("month");
 		var yearElem = document.getElementById("year");
 		var year = d.getFullYear();
-		// Add years from current year including the previous
-		// NUM_YEARS_BACK years to the year selection drop down
 		for (i = 0; i <= NUM_YEARS_BACK; i++) {
 			var opt = document.createElement('option');
 			opt.value = year - i;

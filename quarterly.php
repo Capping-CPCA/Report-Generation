@@ -21,7 +21,7 @@
     global $db;
    
     include('header.php');
-
+	
 	$MIN_FAVOR_SCORE = 7;
 	
 	$pResult = "";
@@ -32,18 +32,18 @@
 	
 	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		$year = $_POST["year"];
-		$quarter = $_POST["quarter"];
+		$quarter = $_POST["quarter"];;
 		$pWhere = "(date_part('year', participantclassattendance.date) = $year ";
 		if ($quarter === "1") {
-			$pWhere .= "AND date_part('month', participantclassattendance.date) < 4 ";
+			$pWhere .= "AND date_part('month', participantclassattendance.date) < 4 "; 
 		} elseif ($quarter === "2") {
 			$pWhere .= "AND date_part('month', participantclassattendance.date) >= 4 
-						AND date_part('month', participantclassattendance.date) < 7 ";
+						AND date_part('month', participantclassattendance.date) < 7 "; 
 		} elseif ($quarter === "3") {
 			$pWhere .= "AND date_part('month', participantclassattendance.date) >= 7
-						AND date_part('month', participantclassattendance.date) < 10 ";
+						AND date_part('month', participantclassattendance.date) < 10 "; 
 		} else {
-			$pWhere .= "AND date_part('month', participantclassattendance.date) >= 10 ";
+			$pWhere .= "AND date_part('month', participantclassattendance.date) >= 10 "; 
 		}
 		$pWhere .= "AND participantclassattendance.isnew = TRUE)";
 		$pQuery = "SELECT COUNT(DISTINCT(participantclassattendance.participantid)) FROM participantclassattendance WHERE $pWhere";
@@ -59,7 +59,7 @@
 		$sInFavor = " prestopicdiscussedscore > $MIN_FAVOR_SCORE AND preschildperspectivescore > $MIN_FAVOR_SCORE AND presotherparentsscore > $MIN_FAVOR_SCORE AND practiceinfoscore > $MIN_FAVOR_SCORE ";
 		$sTotalQuery = $sBaseQuery . "WHERE surveyid IN ($formIDQuery) ";
 		$sFavorQuery = $sTotalQuery . "AND ($sInFavor)";
-
+					
 		$sTotalResults = pg_fetch_all($db->query($sTotalQuery, []))[0];
 		$sFavorResults = pg_fetch_all($db->query($sFavorQuery, []))[0];
 	}
@@ -71,18 +71,18 @@
 				<div class="col">
 					<div class="form-group">
 						<select class="form-control" name="quarter" id="quarter">
-							<option value="1">Q1</option>
-							<option value="2">Q2</option>
-							<option value="3">Q3</option>
-							<option value="4">Q4</option>
-						</select>
+                     <option value="1">Q1</option>
+                     <option value="2">Q2</option>
+					 <option value="3">Q3</option>
+					 <option value="4">Q4</option>
+                  </select>
 					</div>
 				</div>
 				<div class="col">
 					<div class="form-group">
 						<select class="form-control" name="year" id="year">
-							<!-- Javascript below adds the options based on current year -->
-						</select>
+						<!-- Javascript below adds the options based on current year -->
+                  </select>
 					</div>
 				</div>
 			</div>
@@ -104,7 +104,7 @@
 			</thead>
 			<tbody>
 				<tr>
-					<th scope="row">Total # of clients served (unduplicated):</th>
+					<th scope="row">Total # of clients served (unduplicated):</td>
 						<td><b><?=$pResult?></b></td>
 				</tr>
 			</tbody>
@@ -128,7 +128,7 @@
 					<td scope="row">Have an increased knowledge of the topics</td>
 					<td>
 						<?php if (count($sFavorResults) > 0) {
-						if ($sTotalResults["topic"] > 0)
+						if ($sTotalResults["topic"] > 0) 
 							echo ($sFavorResults["topic"]/$sTotalResults["topic"])*100 . "%";
 					}?>
 					</td>
@@ -143,7 +143,7 @@
 					<td scope="row">Plan on using specific techniques discussed in class</td>
 					<td>
 						<?php if (count($sFavorResults) > 0) {
-						if ($sTotalResults["practice"] > 0)
+						if ($sTotalResults["practice"] > 0) 
 							echo ($sFavorResults["practice"]/$sTotalResults["practice"])*100 . "%";
 					}?>
 					</td>
@@ -158,7 +158,7 @@
 					<td scope="row">Realized other parents share the same concerns</td>
 					<td>
 						<?php if (count($sFavorResults) > 0) {
-						if ($sTotalResults["otherparents"] > 0)
+						if ($sTotalResults["otherparents"] > 0) 
 							echo ($sFavorResults["otherparents"]/$sTotalResults["otherparents"])*100 . "%";
 					}?>
 					</td>
@@ -173,7 +173,7 @@
 					<td scope="row">Understand children have different perspectives than they do</td>
 					<td>
 						<?php if (count($sFavorResults) > 0) {
-						if ($sTotalResults["perspective"] > 0)
+						if ($sTotalResults["perspective"] > 0) 
 							echo ($sFavorResults["perspective"]/$sTotalResults["perspective"])*100 . "%";
 					}?>
 					</td>
