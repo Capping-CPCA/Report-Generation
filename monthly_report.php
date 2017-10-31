@@ -26,12 +26,12 @@
 	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		$year = $_POST["year"];
 		$month = $_POST["month"];
-		$monthWhere = "(date_part('month', classdate) = $month)";
-		$yearWhere = "(date_part('year', classdate) = $year)";
+		$monthWhere = "(date_part('month', date) = $month)";
+		$yearWhere = "(date_part('year', date) = $year)";
 		$pNewWhere = "(isnew = TRUE)";
 		
 		#Total Participant Queries
-		$pBaseQuery = "SELECT COUNT(DISTINCT(pid)) FROM classattendancedetails ";
+		$pBaseQuery = "SELECT COUNT(DISTINCT(participantid)) FROM classattendancedetails ";
 		
 		$pMonthQuery = $pBaseQuery . "WHERE " . $monthWhere . " AND " . $yearWhere;
 		$pMonthRes = pg_fetch_result($db->query($pMonthQuery ,[]), 0, 0);
@@ -495,8 +495,8 @@
 		
 		#Children Served Indirectly
 		$baseQuery = "SELECT SUM(numchildren) FROM classattendancedetails
-						WHERE pid IN (
-							SELECT DISTINCT(pid) FROM classattendancedetails
+						WHERE participantid IN (
+							SELECT DISTINCT(participantid) FROM classattendancedetails
 							WHERE $yearWhere ";
 		$query = $baseQuery . " AND $monthWhere); ";
 		$numChildMonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
@@ -507,7 +507,7 @@
 		$numChildDupRes = $numChildMonthRes - $numChildNewRes;
 		
 		#Num of Classes
-		$baseQuery = "SELECT COUNT(DISTINCT(classdate ::DATE)) FROM classattendancedetails ";
+		$baseQuery = "SELECT COUNT(DISTINCT(date ::DATE)) FROM classattendancedetails ";
 		$query = $baseQuery . "WHERE $monthWhere AND $yearWhere;";
 		$numClassMonthRes = pg_fetch_result($db->query($query ,[]), 0, 0);
 		$query = $baseQuery . "WHERE $yearWhere;";

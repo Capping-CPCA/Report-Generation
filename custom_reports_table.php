@@ -16,21 +16,13 @@
 		
 		authorizedPage();
 		if ($_SERVER['REQUEST_METHOD'] !== 'POST') header('Location: custom-reports');
-		global $params, $route, $view;
+		global $params, $route, $view, $db;
 		include('header.php');
-		
-		//REPLACE THIS WITH REAL DATABASE
-		$db2 = new Database('localhost', '5432',
-		'postgres', 'admin', // replace with actual password
-		'EvanDB');
-		$db2->connect();
-		///////////
 		
 		$month = $_POST['month'];
 		$year = $_POST['year'];
 		$locs = isset($_POST['location']) ? $_POST['location'] : [];
 		$races = isset($_POST['race']) ? $_POST['race'] : [];
-		#$ages = isset($_POST['age']) ? $_POST['age'] : [];
 		$minAge = $_POST['minAge'];
 		$maxAge = $_POST['maxAge'];
 		$monthQuery = "(date_part('month', participantclassattendance.date) = $month)";
@@ -74,8 +66,7 @@
 		if ($ageQuery !== "") $yearWhereClause .= "AND $ageQuery ";
 		
 		$monthWhereClause = $yearWhereClause . "AND $monthQuery ";
-		$newWhereClause = $monthWhereClause . "AND participantclassattendance.firstclass = TRUE;";
-		$duplWhereClause = $monthWhereClause . "AND participantclassattendance.firstclass = FALSE;";
+		$newWhereClause = $monthWhereClause . "AND participantclassattendance.isnew = TRUE;";
 		$monthWhereClause .= ";";
 		
 		$baseQuery = "SELECT COUNT(DISTINCT(participants.participantid)) as Participants
@@ -83,10 +74,11 @@
 					ON participants.participantid = participantclassattendance.participantid
 					WHERE ";
 					
-		$monthRes = pg_fetch_result($db2->query($baseQuery . $monthWhereClause, []), 0, 0);
-		$newRes = pg_fetch_result($db2->query($baseQuery . $newWhereClause, []), 0, 0);
-		$duplRes = pg_fetch_result($db2->query($baseQuery . $duplWhereClause, []), 0, 0);
-		$yearRes = pg_fetch_result($db2->query($baseQuery . $yearWhereClause, []), 0, 0);
+		echo $baseQuery . $newWhereClause;
+		$monthRes = pg_fetch_result($db->query($baseQuery . $monthWhereClause, []), 0, 0);
+		$newRes = pg_fetch_result($db->query($baseQuery . $newWhereClause, []), 0, 0);
+		$duplRes = $monthRes - $newRes;
+		$yearRes = pg_fetch_result($db->query($baseQuery . $yearWhereClause, []), 0, 0);
 		?>
 <div class="container">
 	<div class="container py-2">
