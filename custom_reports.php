@@ -13,13 +13,11 @@
 	 * @author Daniel Ahl
 	 *		   Rafael Mormol
 	 * @copyright 2017 Marist College
-	 * @version 0.1.4.2
-	 * @since 0.1.4.1
-	 */
-		authorizedPage();
-		
-		include('header.php');
-			
+	 * @version 0.3
+	 * @since 0.1.4
+	 */		
+	
+	include('header.php');
 ?>
 <div class="container py-5">
 	<div class="col-auto" >

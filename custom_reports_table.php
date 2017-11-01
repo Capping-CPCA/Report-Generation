@@ -10,111 +10,79 @@
 	 * @author Daniel Ahl
 	 *		   Rafael Mormol
 	 * @copyright 2017 Marist College
-	 * @version 0.1.4.2
-	 * @since 0.1.4.1
+	 * @version 0.3
+	 * @since 0.1.4
 	 */
-		
-		authorizedPage();
-		if ($_SERVER['REQUEST_METHOD'] !== 'POST') header('Location: custom-reports');
-		
-		global $db;
-		
-		include('header.php');
+	if ($_SERVER['REQUEST_METHOD'] !== 'POST') header('Location: custom-reports');
 	
-		$month = $_POST['month'];
-		$year = $_POST['year'];
-		$locs = isset($_POST['location']) ? $_POST['location'] : [];
-		$races = isset($_POST['race']) ? $_POST['race'] : [];
-		$minAge = $_POST['minAge'];
-		$maxAge = $_POST['maxAge'];
-		$monthQuery = "(date_part('month', participantclassattendance.date) = $month)";
-		$yearQuery = "(date_part('year', participantclassattendance.date) = $year)";
-		$locQuery = "";
-		
-		if (count($locs) > 0) {
-			$locQuery = "(participantclassattendance.siteName = '" . $locs[0] . "' ";
-			for ($i = 1; $i < count($locs); $i++) {
-				$locQuery .= "OR participantclassattendance.siteName = '" . $locs[$i] . "' ";
-			}
-			$locQuery .= ")";
+	global $db;
+
+	$month = $_POST['month'];
+	$year = $_POST['year'];
+	$locs = isset($_POST['location']) ? $_POST['location'] : [];
+	$races = isset($_POST['race']) ? $_POST['race'] : [];
+	$minAge = $_POST['minAge'];
+	$maxAge = $_POST['maxAge'];
+	$monthQuery = "(date_part('month', participantclassattendance.date) = $month)";
+	$yearQuery = "(date_part('year', participantclassattendance.date) = $year)";
+	$locQuery = "";
+	
+	if (count($locs) > 0) {
+		$locQuery = "(participantclassattendance.siteName = '" . $locs[0] . "' ";
+		for ($i = 1; $i < count($locs); $i++) {
+			$locQuery .= "OR participantclassattendance.siteName = '" . $locs[$i] . "' ";
 		}
-		
-		$raceQuery = "";
-		if (count($races) > 0) {
-			$raceQuery = "(participants.race = '" . $races[0] . "' ";
-			for ($i = 1; $i < count($races); $i++) {
-				$raceQuery .= "OR participants.race = '" . $races[$i] . "' ";
-			}
-			$raceQuery .= ")";
+		$locQuery .= ")";
+	}
+	
+	$raceQuery = "";
+	if (count($races) > 0) {
+		$raceQuery = "(participants.race = '" . $races[0] . "' ";
+		for ($i = 1; $i < count($races); $i++) {
+			$raceQuery .= "OR participants.race = '" . $races[$i] . "' ";
 		}
-		$ageQuery = "";
-		if ($minAge !== 'any') {
-			$ageQuery = "((date_part('year', AGE(participants.dateOfBirth)) >= $minAge) ";
-		}
-		if ($maxAge !== 'any') {
-			if ($minAge === 'any') {
-				$ageQuery = "(";
-			} else {
-				$ageQuery .= "AND ";
-			}
-			$ageQuery .= "(date_part('year', AGE(participants.dateOfBirth)) <= $maxAge))";
+		$raceQuery .= ")";
+	}
+	$ageQuery = "";
+	if ($minAge !== 'any') {
+		$ageQuery = "((date_part('year', AGE(participants.dateOfBirth)) >= $minAge) ";
+	}
+	if ($maxAge !== 'any') {
+		if ($minAge === 'any') {
+			$ageQuery = "(";
 		} else {
-			if ($ageQuery !== "") $ageQuery .= ")";
+			$ageQuery .= "AND ";
 		}
-		
-		$yearWhereClause = "$yearQuery ";
-		if ($locQuery !== "") $yearWhereClause .= "AND $locQuery ";
-		if ($raceQuery !== "") $yearWhereClause .= "AND $raceQuery ";
-		if ($ageQuery !== "") $yearWhereClause .= "AND $ageQuery ";
-		
-		$monthWhereClause = $yearWhereClause . "AND $monthQuery ";
-		$newWhereClause = $monthWhereClause . "AND participantclassattendance.isnew = TRUE;";
-		$monthWhereClause .= ";";
-		
-		$baseQuery = "SELECT COUNT(DISTINCT(participants.participantid)) as Participants
-					FROM participants INNER JOIN participantclassattendance
-					ON participants.participantid = participantclassattendance.participantid
-					WHERE ";
-					
-		$monthRes = pg_fetch_result($db->query($baseQuery . $monthWhereClause, []), 0, 0);
-		$newRes = pg_fetch_result($db->query($baseQuery . $newWhereClause, []), 0, 0);
-		$duplRes = $monthRes - $newRes;
-		$yearRes = pg_fetch_result($db->query($baseQuery . $yearWhereClause, []), 0, 0);
+		$ageQuery .= "(date_part('year', AGE(participants.dateOfBirth)) <= $maxAge))";
+	} else {
+		if ($ageQuery !== "") $ageQuery .= ")";
+	}
+	
+	$yearWhereClause = "$yearQuery ";
+	if ($locQuery !== "") $yearWhereClause .= "AND $locQuery ";
+	if ($raceQuery !== "") $yearWhereClause .= "AND $raceQuery ";
+	if ($ageQuery !== "") $yearWhereClause .= "AND $ageQuery ";
+	
+	$monthWhereClause = $yearWhereClause . "AND $monthQuery ";
+	$newWhereClause = $monthWhereClause . "AND participantclassattendance.isnew = TRUE;";
+	$monthWhereClause .= ";";
+	
+	$baseQuery = "SELECT COUNT(DISTINCT(participants.participantid)) as Participants
+				FROM participants INNER JOIN participantclassattendance
+				ON participants.participantid = participantclassattendance.participantid
+				WHERE ";
+				
+	$monthRes = pg_fetch_result($db->query($baseQuery . $monthWhereClause, []), 0, 0);
+	$newRes = pg_fetch_result($db->query($baseQuery . $newWhereClause, []), 0, 0);
+	$duplRes = $monthRes - $newRes;
+	$yearRes = pg_fetch_result($db->query($baseQuery . $yearWhereClause, []), 0, 0);
+	
+	include('header.php');
 ?>
 <div class="container">
 	<div class="container py-2">
 		<div align="center">
-			<h2>
-				<?php
-			switch ($month) {
-				case 1: echo "January";
-						break;
-				case 2: echo "February";
-						break;
-				case 3: echo "March";
-						break;
-				case 4: echo "April";
-						break;
-				case 5: echo "May";
-						break;
-				case 6: echo "June";
-						break;
-				case 7: echo "July";
-						break;
-				case 8: echo "August";
-						break;
-				case 9: echo "September";
-						break;
-				case 10: echo "October";
-						break;
-				case 11: echo "November";
-						break;
-				case 12: echo "December";
-						break;
-			}
-			?>
-					<?=$year?>
-			</h2>
+			<h2><?=cal_info(0)['months'][$month] . " " . $year;?></h2>
 		</div>
 		<div align="center">
 			<?php
@@ -188,29 +156,11 @@
 		</table>
 	</div>
 	<div class="container" align="center">
-		<form action="custom-reports" method="POST" autocomplete="on">
-			<input type="hidden" name="month" value="<?= $_POST['month']?>" />
-			<input type="hidden" name="year" value="<?=$_POST['year']?>" />
-			<input type="hidden" name="minAge" value="<?= $_POST['minAge']?>" />
-			<input type="hidden" name="maxAge" value="<?= $_POST['maxAge']?>" />
-			<button type="submit" class="btn cpca">Run Another Report</button>
-		</form>
+		<button class="btn cpca" onclick="window.history.back();">Run Another Report</button>
 	</div>
 </div>
 <style>
 @media print{
-	#main-content {
-		overflow: visible;
-	}
-	body{
-		overflow: visible;
-	}
-	.navbar {
-		display: none;
-	}
-	.side-menu {
-		display: none;
-	}
 	.btn {
 		display: none;
 	}

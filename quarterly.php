@@ -13,14 +13,11 @@
 	 * @author Daniel Ahl
 	 *		   Rafael Mormol
 	 * @copyright 2017 Marist College
-	 * @version 0.1.4.2
-	 * @since 0.1.4.1
+	 * @version 0.3
+	 * @since 0.1.4
 	 */
-    authorizedPage();
-   
+	 
     global $db;
-   
-    include('header.php');
 	
 	$MIN_FAVOR_SCORE = 7;
 	
@@ -63,6 +60,8 @@
 		$sTotalResults = pg_fetch_all($db->query($sTotalQuery, []))[0];
 		$sFavorResults = pg_fetch_all($db->query($sFavorQuery, []))[0];
 	}
+	   
+    include('header.php');
 ?>
 <div class="container">
 	<div class="container pt-5">
@@ -95,97 +94,99 @@
 			</div>
 		</form>
 	</div>
-	<div class="container py-3">
-		<h1 class="text-center" id="date_display"><?php if ($quarter !== "") echo "Q" . $quarter;?> <?=$year?></h1>
-	</div>
-	<div class="container py-3">
-		<table class="table table-active">
-			<thead>
-			</thead>
-			<tbody>
-				<tr>
-					<th scope="row">Total # of clients served (unduplicated):</td>
-						<td><b><?=$pResult?></b></td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-	<div class="container pb-2">
-		<h3 class="text-center">Survey Results</h3>
-	</div>
-	<div class="container">
-		<table class="table table-hover">
-			<thead>
-				<tr>
-					<th>Questions</th>
-					<th>% in Favor</th>
-					<th># in Favor</th>
-					<th>Total Respondents</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td scope="row">Have an increased knowledge of the topics</td>
-					<td>
-						<?php if (count($sFavorResults) > 0) {
-						if ($sTotalResults["topic"] > 0) 
-							echo ($sFavorResults["topic"]/$sTotalResults["topic"])*100 . "%";
-					}?>
-					</td>
-					<td>
-						<?php if (count($sFavorResults) > 0) echo $sFavorResults["topic"];?>
-					</td>
-					<td>
-						<?php if (count($sTotalResults) > 0) echo $sTotalResults["topic"];?>
-					</td>
-				</tr>
-				<tr>
-					<td scope="row">Plan on using specific techniques discussed in class</td>
-					<td>
-						<?php if (count($sFavorResults) > 0) {
-						if ($sTotalResults["practice"] > 0) 
-							echo ($sFavorResults["practice"]/$sTotalResults["practice"])*100 . "%";
-					}?>
-					</td>
-					<td>
-						<?php if (count($sFavorResults) > 0) echo $sFavorResults["practice"];?>
-					</td>
-					<td>
-						<?php if (count($sTotalResults) > 0) echo $sTotalResults["practice"];?>
-					</td>
-				</tr>
-				<tr>
-					<td scope="row">Realized other parents share the same concerns</td>
-					<td>
-						<?php if (count($sFavorResults) > 0) {
-						if ($sTotalResults["otherparents"] > 0) 
-							echo ($sFavorResults["otherparents"]/$sTotalResults["otherparents"])*100 . "%";
-					}?>
-					</td>
-					<td>
-						<?php if (count($sFavorResults) > 0) echo $sFavorResults["otherparents"];?>
-					</td>
-					<td>
-						<?php if (count($sTotalResults) > 0) echo $sTotalResults["otherparents"];?>
-					</td>
-				</tr>
-				<tr>
-					<td scope="row">Understand children have different perspectives than they do</td>
-					<td>
-						<?php if (count($sFavorResults) > 0) {
-						if ($sTotalResults["perspective"] > 0) 
-							echo ($sFavorResults["perspective"]/$sTotalResults["perspective"])*100 . "%";
-					}?>
-					</td>
-					<td>
-						<?php if (count($sFavorResults) > 0) echo $sFavorResults["perspective"];?>
-					</td>
-					<td>
-						<?php if (count($sTotalResults) > 0) echo $sTotalResults["perspective"];?>
-					</td>
-				</tr>
-			</tbody>
-		</table>
+	<div class="container" <?php if ($_SERVER['REQUEST_METHOD'] !== 'POST') echo "style='display: none;'"?>>
+		<div class="container py-3">
+			<h1 class="text-center" id="date_display"><?php if ($quarter !== "") echo "Q" . $quarter . " " . $year?></h1>
+		</div>
+		<div class="container py-3">
+			<table class="table table-active">
+				<thead>
+				</thead>
+				<tbody>
+					<tr>
+						<th scope="row">Total # of clients served (unduplicated):</td>
+							<td><b><?=$pResult?></b></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="container pb-2">
+			<h3 class="text-center">Survey Results</h3>
+		</div>
+		<div class="container">
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th>Questions</th>
+						<th>% in Favor</th>
+						<th># in Favor</th>
+						<th>Total Respondents</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td scope="row">Have an increased knowledge of the topics</td>
+						<td>
+							<?php if (count($sFavorResults) > 0) {
+							if ($sTotalResults["topic"] > 0) 
+								echo ($sFavorResults["topic"]/$sTotalResults["topic"])*100 . "%";
+						}?>
+						</td>
+						<td>
+							<?php if (count($sFavorResults) > 0) echo $sFavorResults["topic"];?>
+						</td>
+						<td>
+							<?php if (count($sTotalResults) > 0) echo $sTotalResults["topic"];?>
+						</td>
+					</tr>
+					<tr>
+						<td scope="row">Plan on using specific techniques discussed in class</td>
+						<td>
+							<?php if (count($sFavorResults) > 0) {
+							if ($sTotalResults["practice"] > 0) 
+								echo ($sFavorResults["practice"]/$sTotalResults["practice"])*100 . "%";
+						}?>
+						</td>
+						<td>
+							<?php if (count($sFavorResults) > 0) echo $sFavorResults["practice"];?>
+						</td>
+						<td>
+							<?php if (count($sTotalResults) > 0) echo $sTotalResults["practice"];?>
+						</td>
+					</tr>
+					<tr>
+						<td scope="row">Realized other parents share the same concerns</td>
+						<td>
+							<?php if (count($sFavorResults) > 0) {
+							if ($sTotalResults["otherparents"] > 0) 
+								echo ($sFavorResults["otherparents"]/$sTotalResults["otherparents"])*100 . "%";
+						}?>
+						</td>
+						<td>
+							<?php if (count($sFavorResults) > 0) echo $sFavorResults["otherparents"];?>
+						</td>
+						<td>
+							<?php if (count($sTotalResults) > 0) echo $sTotalResults["otherparents"];?>
+						</td>
+					</tr>
+					<tr>
+						<td scope="row">Understand children have different perspectives than they do</td>
+						<td>
+							<?php if (count($sFavorResults) > 0) {
+							if ($sTotalResults["perspective"] > 0) 
+								echo ($sFavorResults["perspective"]/$sTotalResults["perspective"])*100 . "%";
+						}?>
+						</td>
+						<td>
+							<?php if (count($sFavorResults) > 0) echo $sFavorResults["perspective"];?>
+						</td>
+						<td>
+							<?php if (count($sTotalResults) > 0) echo $sTotalResults["perspective"];?>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 	</div>
 </div>
 <script>
@@ -205,7 +206,7 @@
 			yearElem.appendChild(opt);
 		}
 		display = document.getElementById("date_display").innerHTML;
-		if (display === " ") {
+		if (display === "") {
 			var month = d.getMonth();
 			if (month < 3) {
 				quartElem.selectedIndex = 0;
@@ -225,18 +226,6 @@
 </script>
 <style>
 @media print{
-	#main-content {
-		overflow: visible;
-	}
-	body{
-		overflow: visible;
-	}
-	.navbar {
-		display: none;
-	}
-	.side-menu {
-		display: none;
-	}
 	.btn {
 		display: none;
 	}
